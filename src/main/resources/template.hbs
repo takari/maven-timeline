@@ -17,7 +17,7 @@
 <body>
 {{#each .}}
 <div class="measure {{phase}}-{{goal}}" style="left: {{left}}px;width: {{width}}px;">{{project}} - {{phase}} -
-    {{goal}}
+    {{goal}} - {{id}} : {{elapsed}} [{{start}}, {{end}}]
 </div>
 {{/each}}
 </body>

@@ -65,11 +65,12 @@ public class BuildEventListener extends AbstractExecutionListener {
 
   private String key(ExecutionEvent event) {
     MojoExecution mojo = event.getMojoExecution();
+    String id = mojo.getExecutionId();
     String goal = mojo.getGoal();
     String phase = mojo.getLifecyclePhase();
     String group = event.getProject().getGroupId();
     String project = event.getProject().getArtifactId();
-    return group + "/" + project + "/" + phase + "/" + goal;
+    return group + "/" + project + "/" + phase + "/" + goal + "/" +id;
   }
 
   public void report() {
@@ -92,8 +93,12 @@ public class BuildEventListener extends AbstractExecutionListener {
       measure.project = keyParts[1];
       measure.phase = keyParts[2];
       measure.goal = keyParts[3];
-      measure.left = ((startTimes.get(key) - buildStartTime) * 10000L) / (buildEndTime - buildStartTime);
-      measure.width = (((endTimes.get(key) - buildStartTime) * 10000L) / (buildEndTime - buildStartTime)) - measure.left;
+      measure.id = keyParts[4];
+      measure.start = startTimes.get(key) - buildStartTime;
+      measure.end = endTimes.get(key) - buildStartTime;
+      measure.left = (measure.start * 10000L) / (buildEndTime - buildStartTime);
+      measure.width = ((measure.end * 10000L) / (buildEndTime - buildStartTime)) - measure.left;
+      measure.elapsed = measure.end - measure.start;
       measures.add(measure);
     }
 
@@ -125,6 +130,10 @@ public class BuildEventListener extends AbstractExecutionListener {
     String project;
     String phase;
     String goal;
+    String id;
+    Long start;
+    Long end;
+    Long elapsed;
     Long left;
     Long width;
 
