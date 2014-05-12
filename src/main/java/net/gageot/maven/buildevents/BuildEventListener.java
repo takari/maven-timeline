@@ -29,6 +29,7 @@ public class BuildEventListener extends AbstractExecutionListener {
   private final File output;
   private final Map<String, Long> startTimes = new ConcurrentHashMap<String, Long>();
   private final Map<String, Long> endTimes = new ConcurrentHashMap<String, Long>();
+  private final Map<String, Long> threads = new ConcurrentHashMap<String, Long>();
 
   public BuildEventListener(File output) {
     this.output = output;
@@ -36,7 +37,9 @@ public class BuildEventListener extends AbstractExecutionListener {
 
   @Override
   public void mojoStarted(ExecutionEvent event) {
-    startTimes.put(key(event), System.currentTimeMillis());
+    String key = key(event);
+    startTimes.put(key, System.currentTimeMillis());
+    threads.put(key, Thread.currentThread().getId());
   }
 
   @Override
@@ -99,6 +102,7 @@ public class BuildEventListener extends AbstractExecutionListener {
       measure.left = (measure.start * 10000L) / (buildEndTime - buildStartTime);
       measure.width = ((measure.end * 10000L) / (buildEndTime - buildStartTime)) - measure.left;
       measure.elapsed = measure.end - measure.start;
+      measure.thread = threads.get(key);
       measures.add(measure);
     }
 
@@ -136,6 +140,7 @@ public class BuildEventListener extends AbstractExecutionListener {
     Long elapsed;
     Long left;
     Long width;
+    Long thread;
 
     @Override
     public int compareTo(Measure other) {
