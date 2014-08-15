@@ -25,8 +25,8 @@ import org.codehaus.plexus.component.annotations.*;
 
 @Component(role = AbstractMavenLifecycleParticipant.class, hint = "buildevents")
 public class BuildEventsExtension extends AbstractMavenLifecycleParticipant {
-  private static final String OUTPUT_FILE = "timeline.output.file";
-  private static final String DEFAULT_FILE_DESTINATION = "target/timeline.html";
+  private static final String OUTPUT_FILE = "execution.metrics.output.file";
+  private static final String DEFAULT_FILE_DESTINATION = "target/execution-metrics.json";
 
   @Override
   public void afterProjectsRead(MavenSession session) {
