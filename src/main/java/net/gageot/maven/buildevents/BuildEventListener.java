@@ -24,16 +24,22 @@ import org.apache.maven.project.MavenProject;
 
 public class BuildEventListener extends AbstractExecutionListener {
     private final File output;
+    private final long start;
     private final Map<Execution, Metric> executionMetrics = new ConcurrentHashMap<Execution, Metric>();
 
     public BuildEventListener(File output) {
         this.output = output;
+        this.start = System.currentTimeMillis();
+    }
+
+    long millis() {
+        return System.currentTimeMillis() - start;
     }
 
     @Override
     public void mojoStarted(ExecutionEvent event) {
         Execution key = key(event);
-        executionMetrics.put(key, new Metric(key, Thread.currentThread().getId(), System.currentTimeMillis()));
+        executionMetrics.put(key, new Metric(key, Thread.currentThread().getId(), millis()));
     }
 
     @Override
@@ -54,7 +60,7 @@ public class BuildEventListener extends AbstractExecutionListener {
     private void mojoEnd(ExecutionEvent event) {
         final Metric metric = executionMetrics.get(key(event));
         if (metric == null) return;
-        metric.setEnd(System.currentTimeMillis());
+        metric.setEnd(millis());
     }
 
     @Override
