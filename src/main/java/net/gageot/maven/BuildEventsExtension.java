@@ -22,30 +22,44 @@ import net.gageot.maven.buildevents.*;
 import org.apache.maven.*;
 import org.apache.maven.execution.*;
 import org.codehaus.plexus.component.annotations.*;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 
-@Component(role = AbstractMavenLifecycleParticipant.class, hint = "buildevents")
-public class BuildEventsExtension extends AbstractMavenLifecycleParticipant {
-  private static final String OUTPUT_FILE = "execution.metrics.output.file";
-  private static final String DEFAULT_FILE_DESTINATION = "target/execution-metrics.json";
+@Component( role = AbstractMavenLifecycleParticipant.class, hint = "buildevents" )
+public class BuildEventsExtension
+    extends AbstractMavenLifecycleParticipant
+{
+    private static final String OUTPUT_FILE = "execution.metrics.output.file";
 
-  @Override
-  public void afterProjectsRead(MavenSession session) {
-    MavenExecutionRequest request = session.getRequest();
+    private static final String DEFAULT_FILE_DESTINATION = "target/execution-metrics.json";
 
-    ExecutionListener original = request.getExecutionListener();
-    BuildEventListener listener = new BuildEventListener(logFile(session));
-    ExecutionListener chain = new ExecutionListenerChain(original, listener);
+    @Override
+    public void afterProjectsRead( MavenSession session )
+    {
+        MavenExecutionRequest request = session.getRequest();
 
-    request.setExecutionListener(chain);
-  }
+        ExecutionListener original = request.getExecutionListener();
+        BuildEventListener listener = new BuildEventListener( logFile( session ) );
+        ExecutionListener chain = new ExecutionListenerChain( original, listener );
 
-  private File logFile(MavenSession session) {
-    String path = session.getUserProperties().getProperty(OUTPUT_FILE, DEFAULT_FILE_DESTINATION);
-    if (new File(path).isAbsolute()) {
-      return new File(path);
+        request.setExecutionListener( chain );
     }
 
-    String buildDir = session.getExecutionRootDirectory();
-    return new File(buildDir, path);
-  }
+    private File logFile( MavenSession session )
+    {
+        String path = session.getUserProperties().getProperty( OUTPUT_FILE, DEFAULT_FILE_DESTINATION );
+        if ( new File( path ).isAbsolute() )
+        {
+            return new File( path );
+        }
+
+        String buildDir = session.getExecutionRootDirectory();
+        return new File( buildDir, path );
+    }
+
+    public static void main( String[] args )
+    {
+        String output = new DateTime( DateTimeZone.UTC ).toString();
+        System.out.println(output);
+    }
 }
