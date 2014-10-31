@@ -97,7 +97,7 @@ Timeline.DefaultEventSource.Event.prototype.fillInfoBubble = function
             tl = Timeline.create(document.getElementById("tl"), bandInfos, Timeline.HORIZONTAL);
             // Adding the date to the url stops browser caching of data during testing or if
             // the data source is a dynamic query...
-            tl.loadJSON("execution-metrics.json", function(json, url) {
+            tl.loadJSON("maven-timeline.json", function(json, url) {
                 eventSource.loadJSON(json, url);
             });                                                
         }
