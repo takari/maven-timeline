@@ -32,6 +32,7 @@ import com.google.common.collect.Lists;
 // table with build values that are sortable
 
 public class BuildEventListener extends AbstractExecutionListener {
+  private final File mavenTimeline;
   private final File output;
   private final long start;
   private final Map<Execution, Metric> executionMetrics = new ConcurrentHashMap<Execution, Metric>();
@@ -47,8 +48,9 @@ public class BuildEventListener extends AbstractExecutionListener {
       "blue", "green"
   };
 
-  public BuildEventListener(File output) {
+  public BuildEventListener(File output, File mavenTimeline) {
     this.output = output;
+    this.mavenTimeline = mavenTimeline;
     this.start = System.currentTimeMillis();
     this.startTime = nowInUtc();
   }
@@ -132,14 +134,16 @@ public class BuildEventListener extends AbstractExecutionListener {
     if (!(path.isDirectory() || path.mkdirs())) {
       throw new IOException("Unable to create " + path);
     }
-
-    Writer writer = new BufferedWriter(new FileWriter(output));
+    
+    Writer writer = new BufferedWriter(new FileWriter(output));    
+    Writer mavenTimelineWriter = new BufferedWriter(new FileWriter(mavenTimeline));    
     try {
-      //Metric.array(writer, executionMetrics.values());
+      Metric.array(writer, executionMetrics.values());
       Timeline timeline = new Timeline(startTime, endTime, Lists.newArrayList(timelineMetrics.values()));
-      TimelineSerializer.serialize(writer, timeline);
+      TimelineSerializer.serialize(mavenTimelineWriter, timeline);
     } finally {
       writer.close();
+      mavenTimelineWriter.close();
     }
   }
 

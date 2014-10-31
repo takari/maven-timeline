@@ -15,51 +15,51 @@
  */
 package net.gageot.maven;
 
-import java.io.*;
+import java.io.File;
 
-import net.gageot.maven.buildevents.*;
+import net.gageot.maven.buildevents.BuildEventListener;
+import net.gageot.maven.buildevents.ExecutionListenerChain;
 
-import org.apache.maven.*;
-import org.apache.maven.execution.*;
-import org.codehaus.plexus.component.annotations.*;
+import org.apache.maven.AbstractMavenLifecycleParticipant;
+import org.apache.maven.execution.ExecutionListener;
+import org.apache.maven.execution.MavenExecutionRequest;
+import org.apache.maven.execution.MavenSession;
+import org.codehaus.plexus.component.annotations.Component;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
-@Component( role = AbstractMavenLifecycleParticipant.class, hint = "buildevents" )
-public class BuildEventsExtension
-    extends AbstractMavenLifecycleParticipant
-{
-    private static final String OUTPUT_FILE = "execution.metrics.output.file";
+@Component(role = AbstractMavenLifecycleParticipant.class, hint = "buildevents")
+public class BuildEventsExtension extends AbstractMavenLifecycleParticipant {
+  private static final String OUTPUT_FILE = "execution.metrics.output.file";
 
-    private static final String DEFAULT_FILE_DESTINATION = "target/execution-metrics.json";
+  private static final String DEFAULT_FILE_DESTINATION = "target/execution-metrics.json";
 
-    @Override
-    public void afterProjectsRead( MavenSession session )
-    {
-        MavenExecutionRequest request = session.getRequest();
+  @Override
+  public void afterProjectsRead(MavenSession session) {
+    MavenExecutionRequest request = session.getRequest();
 
-        ExecutionListener original = request.getExecutionListener();
-        BuildEventListener listener = new BuildEventListener( logFile( session ) );
-        ExecutionListener chain = new ExecutionListenerChain( original, listener );
+    ExecutionListener original = request.getExecutionListener();
+    BuildEventListener listener = new BuildEventListener(logFile(session), mavenTimelineFile(session));
+    ExecutionListener chain = new ExecutionListenerChain(original, listener);
 
-        request.setExecutionListener( chain );
+    request.setExecutionListener(chain);
+  }
+
+  private File mavenTimelineFile(MavenSession session) {
+    return new File(session.getExecutionRootDirectory(), "target/maven-timeline.json");
+  }
+  
+  private File logFile(MavenSession session) {
+    String path = session.getUserProperties().getProperty(OUTPUT_FILE, DEFAULT_FILE_DESTINATION);
+    if (new File(path).isAbsolute()) {
+      return new File(path);
     }
+    String buildDir = session.getExecutionRootDirectory();
+    return new File(buildDir, path);
+  }
 
-    private File logFile( MavenSession session )
-    {
-        String path = session.getUserProperties().getProperty( OUTPUT_FILE, DEFAULT_FILE_DESTINATION );
-        if ( new File( path ).isAbsolute() )
-        {
-            return new File( path );
-        }
-
-        String buildDir = session.getExecutionRootDirectory();
-        return new File( buildDir, path );
-    }
-
-    public static void main( String[] args )
-    {
-        String output = new DateTime( DateTimeZone.UTC ).toString();
-        System.out.println(output);
-    }
+  public static void main(String[] args) {
+    String output = new DateTime(DateTimeZone.UTC).toString();
+    System.out.println(output);
+  }
 }
