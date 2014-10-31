@@ -9,10 +9,14 @@ import java.util.List;
  * @author Jason van Zyl
  *
  */
-public class Timeline {
+public class Timeline {  
   String dateTimeFormat = "iso8601";
+  String start;
+  String end;
   List<Event> events;
-  public Timeline(List<Event> events) {
-    this.events = events;
+  public Timeline(String start, String end, List<Event> events) {
+    this.start = start;
+    this.end = end;
+    this.events = events;   
   }
 }

@@ -3,6 +3,7 @@ package net.gageot.maven;
 public class Event {
   String start;
   String end;
+  long duration;
   String description;
   long trackNum;
   String color;
@@ -18,5 +19,10 @@ public class Event {
 
   public void setEnd(String end) {
     this.end = end;    
+  }
+  
+  public void setDuration(long duration) {
+    this.duration = duration;
+    this.description = this.description + " (" + duration + " ms)"; 
   }
 }

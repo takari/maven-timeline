@@ -31,24 +31,26 @@ import com.google.common.collect.Lists;
 // highlight the critical path
 // table with build values that are sortable
 
-
-
 public class BuildEventListener extends AbstractExecutionListener {
   private final File output;
   private final long start;
   private final Map<Execution, Metric> executionMetrics = new ConcurrentHashMap<Execution, Metric>();
   private final Map<Execution, Event> timelineMetrics = new ConcurrentHashMap<Execution, Event>();
-  private final Map<Long, Long> threadToTrackNum = new ConcurrentHashMap<Long,Long>();
-  private final Map<Long, Integer> threadNumToColour = new ConcurrentHashMap<Long,Integer>();
+  private final Map<Long, Long> threadToTrackNum = new ConcurrentHashMap<Long, Long>();
+  private final Map<Long, Integer> threadNumToColour = new ConcurrentHashMap<Long, Integer>();
   private long trackNum = 1;
-  
-  private static String[] colours = new String[]{
-    "blue","green"                                           
+
+  String startTime;
+  String endTime;
+
+  private static String[] colours = new String[] {
+      "blue", "green"
   };
-  
+
   public BuildEventListener(File output) {
     this.output = output;
     this.start = System.currentTimeMillis();
+    this.startTime = nowInUtc();
   }
 
   long millis() {
@@ -60,13 +62,13 @@ public class BuildEventListener extends AbstractExecutionListener {
     Execution key = key(event);
     Long threadId = Thread.currentThread().getId();
     Long threadTrackNum = threadToTrackNum.get(threadId);
-    if(threadTrackNum == null) {
+    if (threadTrackNum == null) {
       threadTrackNum = trackNum;
       threadToTrackNum.put(threadId, threadTrackNum);
       trackNum++;
     }
     Integer colour = threadNumToColour.get(threadId);
-    if(colour == null) {
+    if (colour == null) {
       colour = 0;
       threadNumToColour.put(threadId, colour);
     } else {
@@ -74,7 +76,11 @@ public class BuildEventListener extends AbstractExecutionListener {
       threadNumToColour.put(threadId, colour);
     }
     executionMetrics.put(key, new Metric(key, Thread.currentThread().getId(), millis()));
-    timelineMetrics.put(key, new Event(key.toString(), threadTrackNum, colours[colour], new DateTime( DateTimeZone.UTC ).toString()));
+    timelineMetrics.put(key, new Event(key.toString(), threadTrackNum, colours[colour], nowInUtc()));
+  }
+
+  String nowInUtc() {
+    return new DateTime(DateTimeZone.UTC).toString();
   }
 
   @Override
@@ -95,9 +101,12 @@ public class BuildEventListener extends AbstractExecutionListener {
   private void mojoEnd(ExecutionEvent event) {
     final Event timelineMetric = timelineMetrics.get(key(event));
     final Metric metric = executionMetrics.get(key(event));
-    if (metric == null) return;
+    if (metric == null) {
+      return;
+    }
     metric.setEnd(millis());
-    timelineMetric.setEnd(new DateTime( DateTimeZone.UTC ).toString());
+    timelineMetric.setEnd(new DateTime(DateTimeZone.UTC).toString());
+    timelineMetric.setDuration(millis());
   }
 
   @Override
@@ -116,13 +125,18 @@ public class BuildEventListener extends AbstractExecutionListener {
   }
 
   public void report() throws IOException {
+    
+    endTime = nowInUtc();
+    
     File path = output.getParentFile();
-    if (!(path.isDirectory() || path.mkdirs())) throw new IOException("Unable to create " + path);
+    if (!(path.isDirectory() || path.mkdirs())) {
+      throw new IOException("Unable to create " + path);
+    }
 
     Writer writer = new BufferedWriter(new FileWriter(output));
     try {
       //Metric.array(writer, executionMetrics.values());
-      Timeline timeline = new Timeline(Lists.newArrayList(timelineMetrics.values()));
+      Timeline timeline = new Timeline(startTime, endTime, Lists.newArrayList(timelineMetrics.values()));
       TimelineSerializer.serialize(writer, timeline);
     } finally {
       writer.close();
@@ -158,25 +172,51 @@ public class BuildEventListener extends AbstractExecutionListener {
 
     @Override
     public boolean equals(Object obj) {
-      if (this == obj) return true;
-      if (obj == null) return false;
-      if (getClass() != obj.getClass()) return false;
+      if (this == obj) {
+        return true;
+      }
+      if (obj == null) {
+        return false;
+      }
+      if (getClass() != obj.getClass()) {
+        return false;
+      }
       Execution other = (Execution) obj;
       if (artifactId == null) {
-        if (other.artifactId != null) return false;
-      } else if (!artifactId.equals(other.artifactId)) return false;
+        if (other.artifactId != null) {
+          return false;
+        }
+      } else if (!artifactId.equals(other.artifactId)) {
+        return false;
+      }
       if (goal == null) {
-        if (other.goal != null) return false;
-      } else if (!goal.equals(other.goal)) return false;
+        if (other.goal != null) {
+          return false;
+        }
+      } else if (!goal.equals(other.goal)) {
+        return false;
+      }
       if (groupId == null) {
-        if (other.groupId != null) return false;
-      } else if (!groupId.equals(other.groupId)) return false;
+        if (other.groupId != null) {
+          return false;
+        }
+      } else if (!groupId.equals(other.groupId)) {
+        return false;
+      }
       if (id == null) {
-        if (other.id != null) return false;
-      } else if (!id.equals(other.id)) return false;
+        if (other.id != null) {
+          return false;
+        }
+      } else if (!id.equals(other.id)) {
+        return false;
+      }
       if (phase == null) {
-        if (other.phase != null) return false;
-      } else if (!phase.equals(other.phase)) return false;
+        if (other.phase != null) {
+          return false;
+        }
+      } else if (!phase.equals(other.phase)) {
+        return false;
+      }
       return true;
     }
 
@@ -185,7 +225,7 @@ public class BuildEventListener extends AbstractExecutionListener {
       return groupId + ":" + artifactId + ":" + phase + ":" + goal + ":" + id;
     }
   }
-  
+
   static class Metric {
     final Execution execution;
     final Long threadId;
@@ -218,17 +258,21 @@ public class BuildEventListener extends AbstractExecutionListener {
     private String record(String... values) {
       StringBuilder b = new StringBuilder();
       b.append("{");
-      for (String value : values)
+      for (String value : values) {
         b.append(value).append(",");
+      }
       return b.deleteCharAt(b.length() - 1).append("}").toString();
     }
 
     static void array(Appendable a, Iterable<Metric> metrics) throws IOException {
       a.append("[");
       Iterator<Metric> it = metrics.iterator();
-      if (it.hasNext()) a.append(it.next().toJSON());
-      while (it.hasNext())
+      if (it.hasNext()) {
+        a.append(it.next().toJSON());
+      }
+      while (it.hasNext()) {
         a.append(",").append(it.next().toJSON());
+      }
       a.append("]");
     }
   }

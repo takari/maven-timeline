@@ -1,0 +1,1663 @@
+{
+  "dateTimeFormat": "iso8601",
+  "start": "2014-10-31T02:26:38.891Z",
+  "end": "2014-10-31T02:27:36.044Z",
+  "events": [
+    {
+      "start": "2014-10-31T02:26:52.721Z",
+      "end": "2014-10-31T02:26:52.867Z",
+      "duration": 14008,
+      "description": "org.apache.maven:maven-settings-builder:generate-resources:process:default (14008 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:54.247Z",
+      "end": "2014-10-31T02:26:54.525Z",
+      "duration": 15666,
+      "description": "org.apache.maven:maven-aether-provider:validate:enforce:enforce-bytecode-version (15666 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:41.173Z",
+      "end": "2014-10-31T02:26:41.174Z",
+      "duration": 2315,
+      "description": "org.apache.maven:maven-model:validate:enforce:ban-known-bad-maven-versions (2315 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:52.868Z",
+      "end": "2014-10-31T02:26:52.872Z",
+      "duration": 14013,
+      "description": "org.apache.maven:maven-settings-builder:process-resources:resources:default-resources (14013 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:41.174Z",
+      "end": "2014-10-31T02:26:41.265Z",
+      "duration": 2406,
+      "description": "org.apache.maven:maven-model:validate:check:rat-check (2406 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:54.531Z",
+      "end": "2014-10-31T02:26:54.572Z",
+      "duration": 15713,
+      "description": "org.apache.maven:maven-aether-provider:validate:check:rat-check (15713 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:57.867Z",
+      "end": "2014-10-31T02:26:58.115Z",
+      "duration": 19256,
+      "description": "org.apache.maven:maven-core:validate:check:rat-check (19256 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:47.477Z",
+      "end": "2014-10-31T02:26:47.501Z",
+      "duration": 8642,
+      "description": "org.apache.maven:maven-plugin-api:package:jar:default-jar (8642 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:53.732Z",
+      "end": "2014-10-31T02:26:53.744Z",
+      "duration": 14885,
+      "description": "org.apache.maven:maven-repository-metadata:validate:enforce:enforce-bytecode-version (14885 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:58.245Z",
+      "end": "2014-10-31T02:26:58.284Z",
+      "duration": 19425,
+      "description": "org.apache.maven:maven-core:initialize:create:create-buildnumber (19425 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:57.569Z",
+      "end": "2014-10-31T02:26:57.587Z",
+      "duration": 18728,
+      "description": "org.apache.maven:maven-aether-provider:package:jar:default-jar (18728 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:27:00.179Z",
+      "end": "2014-10-31T02:27:00.656Z",
+      "duration": 21797,
+      "description": "org.apache.maven:maven-core:process-classes:check:check-java-1.6-compat (21797 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:46.383Z",
+      "end": "2014-10-31T02:26:46.389Z",
+      "duration": 7530,
+      "description": "org.apache.maven:maven-plugin-api:generate-sources:java:standard (7530 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:52.048Z",
+      "end": "2014-10-31T02:26:52.112Z",
+      "duration": 13253,
+      "description": "org.apache.maven:maven-model-builder:package:jar:default-jar (13253 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:54.698Z",
+      "end": "2014-10-31T02:26:54.839Z",
+      "duration": 15980,
+      "description": "org.apache.maven:maven-aether-provider:compile:compile:default-compile (15980 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:53.779Z",
+      "end": "2014-10-31T02:26:53.788Z",
+      "duration": 14930,
+      "description": "org.apache.maven:maven-repository-metadata:generate-sources:java:standard (14930 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:54.159Z",
+      "end": "2014-10-31T02:26:54.162Z",
+      "duration": 15303,
+      "description": "org.apache.maven:maven-repository-metadata:process-test-resources:testResources:default-testResources (15303 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:46.390Z",
+      "end": "2014-10-31T02:26:46.395Z",
+      "duration": 7536,
+      "description": "org.apache.maven:maven-plugin-api:generate-sources:xpp3-reader:standard (7536 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:53.749Z",
+      "end": "2014-10-31T02:26:53.779Z",
+      "duration": 14920,
+      "description": "org.apache.maven:maven-repository-metadata:validate:check:rat-check (14920 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:48.943Z",
+      "end": "2014-10-31T02:26:49.176Z",
+      "duration": 10317,
+      "description": "org.apache.maven:maven-model-builder:process-classes:generate-metadata:default (10317 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:27:02.138Z",
+      "end": "2014-10-31T02:27:02.212Z",
+      "duration": 23353,
+      "description": "org.apache.maven:maven-core:process-test-classes:generate-test-metadata:default (23353 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:58.284Z",
+      "end": "2014-10-31T02:26:58.288Z",
+      "duration": 19429,
+      "description": "org.apache.maven:maven-core:generate-sources:java:standard (19429 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:27:26.047Z",
+      "end": "2014-10-31T02:27:26.052Z",
+      "duration": 47193,
+      "description": "org.apache.maven:apache-maven:validate:enforce:ban-known-bad-maven-versions (47193 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:27:14.619Z",
+      "end": "2014-10-31T02:27:14.734Z",
+      "duration": 35875,
+      "description": "org.apache.maven:maven-compat:validate:enforce:enforce-bytecode-version (35875 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:55.324Z",
+      "end": "2014-10-31T02:26:55.331Z",
+      "duration": 16472,
+      "description": "org.apache.maven:maven-aether-provider:process-test-classes:generate-test-metadata:default (16472 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:53.451Z",
+      "end": "2014-10-31T02:26:53.457Z",
+      "duration": 14598,
+      "description": "org.apache.maven:maven-settings-builder:process-test-classes:generate-test-metadata:default (14598 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:52.196Z",
+      "end": "2014-10-31T02:26:52.217Z",
+      "duration": 13358,
+      "description": "org.apache.maven:maven-settings:generate-resources:process:default (13358 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:54.572Z",
+      "end": "2014-10-31T02:26:54.696Z",
+      "duration": 15837,
+      "description": "org.apache.maven:maven-aether-provider:generate-resources:process:default (15837 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:45.738Z",
+      "end": "2014-10-31T02:26:45.834Z",
+      "duration": 6975,
+      "description": "org.apache.maven:maven-artifact:test-compile:testCompile:default-testCompile (6975 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:27:25.432Z",
+      "end": "2014-10-31T02:27:25.435Z",
+      "duration": 46576,
+      "description": "org.apache.maven:maven-embedder:process-test-classes:generate-test-metadata:default (46576 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:27:15.210Z",
+      "end": "2014-10-31T02:27:15.214Z",
+      "duration": 36355,
+      "description": "org.apache.maven:maven-compat:process-resources:resources:default-resources (36355 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:52.220Z",
+      "end": "2014-10-31T02:26:52.334Z",
+      "duration": 13475,
+      "description": "org.apache.maven:maven-settings:compile:compile:default-compile (13475 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:47.891Z",
+      "end": "2014-10-31T02:26:47.967Z",
+      "duration": 9108,
+      "description": "org.apache.maven:maven-model-builder:generate-resources:process:default (9108 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:52.872Z",
+      "end": "2014-10-31T02:26:53.103Z",
+      "duration": 14244,
+      "description": "org.apache.maven:maven-settings-builder:compile:compile:default-compile (14244 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:52.217Z",
+      "end": "2014-10-31T02:26:52.219Z",
+      "duration": 13360,
+      "description": "org.apache.maven:maven-settings:process-resources:resources:default-resources (13360 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:53.797Z",
+      "end": "2014-10-31T02:26:53.804Z",
+      "duration": 14945,
+      "description": "org.apache.maven:maven-repository-metadata:generate-sources:xpp3-writer:standard (14945 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:45.243Z",
+      "end": "2014-10-31T02:26:45.542Z",
+      "duration": 6683,
+      "description": "org.apache.maven:maven-artifact:process-classes:check:check-java-1.6-compat (6683 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:44.026Z",
+      "end": "2014-10-31T02:26:44.134Z",
+      "duration": 5275,
+      "description": "org.apache.maven:maven-model:test-compile:testCompile:default-testCompile (5275 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:52.130Z",
+      "end": "2014-10-31T02:26:52.156Z",
+      "duration": 13297,
+      "description": "org.apache.maven:maven-settings:validate:check:rat-check (13297 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:46.867Z",
+      "end": "2014-10-31T02:26:47.152Z",
+      "duration": 8293,
+      "description": "org.apache.maven:maven-plugin-api:process-classes:check:check-java-1.6-compat (8293 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:49.209Z",
+      "end": "2014-10-31T02:26:49.421Z",
+      "duration": 10562,
+      "description": "org.apache.maven:maven-model-builder:test-compile:testCompile:default-testCompile (10562 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:53.744Z",
+      "end": "2014-10-31T02:26:53.749Z",
+      "duration": 14890,
+      "description": "org.apache.maven:maven-repository-metadata:validate:enforce:ban-known-bad-maven-versions (14890 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:27:24.525Z",
+      "end": "2014-10-31T02:27:24.525Z",
+      "duration": 45666,
+      "description": "org.apache.maven:maven-embedder:validate:enforce:ban-known-bad-maven-versions (45666 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:44.942Z",
+      "end": "2014-10-31T02:26:44.977Z",
+      "duration": 6118,
+      "description": "org.apache.maven:maven-artifact:generate-resources:process:default (6118 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:27:33.897Z",
+      "end": "2014-10-31T02:27:35.782Z",
+      "duration": 56923,
+      "description": "org.apache.maven:apache-maven:package:single:create-distro (56923 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:52.129Z",
+      "end": "2014-10-31T02:26:52.130Z",
+      "duration": 13271,
+      "description": "org.apache.maven:maven-settings:validate:enforce:ban-known-bad-maven-versions (13271 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:52.582Z",
+      "end": "2014-10-31T02:26:52.584Z",
+      "duration": 13725,
+      "description": "org.apache.maven:maven-settings:test:test:default-test (13725 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:44.981Z",
+      "end": "2014-10-31T02:26:45.243Z",
+      "duration": 6384,
+      "description": "org.apache.maven:maven-artifact:compile:compile:default-compile (6384 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:41.661Z",
+      "end": "2014-10-31T02:26:41.715Z",
+      "duration": 2856,
+      "description": "org.apache.maven:maven-model:generate-sources:xpp3-extended-reader:standard (2856 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:27:01.487Z",
+      "end": "2014-10-31T02:27:02.138Z",
+      "duration": 23279,
+      "description": "org.apache.maven:maven-core:test-compile:testCompile:default-testCompile (23279 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:41.843Z",
+      "end": "2014-10-31T02:26:43.682Z",
+      "duration": 4823,
+      "description": "org.apache.maven:maven-model:compile:compile:default-compile (4823 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:53.419Z",
+      "end": "2014-10-31T02:26:53.451Z",
+      "duration": 14592,
+      "description": "org.apache.maven:maven-settings-builder:test-compile:testCompile:default-testCompile (14592 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:27:25.366Z",
+      "end": "2014-10-31T02:27:25.384Z",
+      "duration": 46525,
+      "description": "org.apache.maven:maven-embedder:process-classes:generate-metadata:default (46525 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:52.663Z",
+      "end": "2014-10-31T02:26:52.664Z",
+      "duration": 13805,
+      "description": "org.apache.maven:maven-settings-builder:validate:enforce:ban-known-bad-maven-versions (13805 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:54.231Z",
+      "end": "2014-10-31T02:26:54.247Z",
+      "duration": 15388,
+      "description": "org.apache.maven:maven-aether-provider:clean:clean:default-clean (15388 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:41.620Z",
+      "end": "2014-10-31T02:26:41.661Z",
+      "duration": 2802,
+      "description": "org.apache.maven:maven-model:generate-sources:xpp3-reader:standard (2802 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:44.637Z",
+      "end": "2014-10-31T02:26:44.840Z",
+      "duration": 5981,
+      "description": "org.apache.maven:maven-model:package:jar:default-jar (5981 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:52.334Z",
+      "end": "2014-10-31T02:26:52.578Z",
+      "duration": 13719,
+      "description": "org.apache.maven:maven-settings:process-classes:check:check-java-1.6-compat (13719 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:27:24.297Z",
+      "end": "2014-10-31T02:27:24.311Z",
+      "duration": 45453,
+      "description": "org.apache.maven:maven-embedder:clean:clean:default-clean (45453 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:44.872Z",
+      "end": "2014-10-31T02:26:44.942Z",
+      "duration": 6083,
+      "description": "org.apache.maven:maven-artifact:validate:check:rat-check (6083 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:41.265Z",
+      "end": "2014-10-31T02:26:41.620Z",
+      "duration": 2761,
+      "description": "org.apache.maven:maven-model:generate-sources:java:standard (2761 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:53.837Z",
+      "end": "2014-10-31T02:26:53.901Z",
+      "duration": 15042,
+      "description": "org.apache.maven:maven-repository-metadata:compile:compile:default-compile (15042 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:54.164Z",
+      "end": "2014-10-31T02:26:54.167Z",
+      "duration": 15308,
+      "description": "org.apache.maven:maven-repository-metadata:test:test:default-test (15308 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:39.299Z",
+      "end": "2014-10-31T02:26:40.216Z",
+      "duration": 1357,
+      "description": "org.apache.maven:maven:validate:check:rat-check (1357 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:27:02.212Z",
+      "end": "2014-10-31T02:27:02.240Z",
+      "duration": 23381,
+      "description": "org.apache.maven:maven-core:process-test-classes:test-index:default (23381 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:47.152Z",
+      "end": "2014-10-31T02:26:47.156Z",
+      "duration": 8297,
+      "description": "org.apache.maven:maven-plugin-api:process-test-resources:testResources:default-testResources (8297 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:41.747Z",
+      "end": "2014-10-31T02:26:41.783Z",
+      "duration": 2924,
+      "description": "org.apache.maven:maven-model:generate-resources:process:default (2924 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:54.162Z",
+      "end": "2014-10-31T02:26:54.163Z",
+      "duration": 15305,
+      "description": "org.apache.maven:maven-repository-metadata:test-compile:testCompile:default-testCompile (15305 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:27:25.435Z",
+      "end": "2014-10-31T02:27:25.638Z",
+      "duration": 46779,
+      "description": "org.apache.maven:maven-embedder:test:test:default-test (46779 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:27:24.831Z",
+      "end": "2014-10-31T02:27:24.994Z",
+      "duration": 46136,
+      "description": "org.apache.maven:maven-embedder:compile:compile:default-compile (46136 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:49.421Z",
+      "end": "2014-10-31T02:26:49.445Z",
+      "duration": 10586,
+      "description": "org.apache.maven:maven-model-builder:process-test-classes:generate-test-metadata:default (10586 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:58.644Z",
+      "end": "2014-10-31T02:27:00.179Z",
+      "duration": 21320,
+      "description": "org.apache.maven:maven-core:compile:compile:default-compile (21320 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:47.764Z",
+      "end": "2014-10-31T02:26:47.764Z",
+      "duration": 8905,
+      "description": "org.apache.maven:maven-model-builder:validate:enforce:ban-known-bad-maven-versions (8905 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:27:26.052Z",
+      "end": "2014-10-31T02:27:26.306Z",
+      "duration": 47447,
+      "description": "org.apache.maven:apache-maven:validate:check:rat-check (47447 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:58.288Z",
+      "end": "2014-10-31T02:26:58.292Z",
+      "duration": 19433,
+      "description": "org.apache.maven:maven-core:generate-sources:xpp3-reader:standard (19433 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:27:33.564Z",
+      "end": "2014-10-31T02:27:33.897Z",
+      "duration": 55038,
+      "description": "org.apache.maven:apache-maven:test:test:test (55038 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:44.871Z",
+      "end": "2014-10-31T02:26:44.872Z",
+      "duration": 6013,
+      "description": "org.apache.maven:maven-artifact:validate:enforce:ban-known-bad-maven-versions (6013 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:27:14.340Z",
+      "end": "2014-10-31T02:27:14.506Z",
+      "duration": 35647,
+      "description": "org.apache.maven:maven-core:package:jar:default-jar (35647 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:27:14.735Z",
+      "end": "2014-10-31T02:27:14.880Z",
+      "duration": 36021,
+      "description": "org.apache.maven:maven-compat:validate:check:rat-check (36021 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:55.205Z",
+      "end": "2014-10-31T02:26:55.219Z",
+      "duration": 16360,
+      "description": "org.apache.maven:maven-aether-provider:process-test-resources:testResources:default-testResources (16360 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:45.735Z",
+      "end": "2014-10-31T02:26:45.738Z",
+      "duration": 6879,
+      "description": "org.apache.maven:maven-artifact:process-test-resources:testResources:default-testResources (6879 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:41.715Z",
+      "end": "2014-10-31T02:26:41.747Z",
+      "duration": 2888,
+      "description": "org.apache.maven:maven-model:generate-sources:xpp3-writer:standard (2888 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:46.115Z",
+      "end": "2014-10-31T02:26:46.147Z",
+      "duration": 7288,
+      "description": "org.apache.maven:maven-artifact:package:jar:default-jar (7288 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:40.216Z",
+      "end": "2014-10-31T02:26:40.541Z",
+      "duration": 1682,
+      "description": "org.apache.maven:maven:generate-resources:process:default (1682 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:53.804Z",
+      "end": "2014-10-31T02:26:53.833Z",
+      "duration": 14974,
+      "description": "org.apache.maven:maven-repository-metadata:generate-resources:process:default (14974 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:44.134Z",
+      "end": "2014-10-31T02:26:44.637Z",
+      "duration": 5778,
+      "description": "org.apache.maven:maven-model:test:test:default-test (5778 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:44.861Z",
+      "end": "2014-10-31T02:26:44.871Z",
+      "duration": 6012,
+      "description": "org.apache.maven:maven-artifact:validate:enforce:enforce-bytecode-version (6012 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:27:01.306Z",
+      "end": "2014-10-31T02:27:01.487Z",
+      "duration": 22628,
+      "description": "org.apache.maven:maven-core:process-test-resources:testResources:default-testResources (22628 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:27:14.917Z",
+      "end": "2014-10-31T02:27:15.209Z",
+      "duration": 36350,
+      "description": "org.apache.maven:maven-compat:generate-resources:process:default (36350 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:52.664Z",
+      "end": "2014-10-31T02:26:52.720Z",
+      "duration": 13862,
+      "description": "org.apache.maven:maven-settings-builder:validate:check:rat-check (13862 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:52.584Z",
+      "end": "2014-10-31T02:26:52.598Z",
+      "duration": 13739,
+      "description": "org.apache.maven:maven-settings:package:jar:default-jar (13739 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:52.578Z",
+      "end": "2014-10-31T02:26:52.580Z",
+      "duration": 13721,
+      "description": "org.apache.maven:maven-settings:process-test-resources:testResources:default-testResources (13721 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:52.116Z",
+      "end": "2014-10-31T02:26:52.123Z",
+      "duration": 13264,
+      "description": "org.apache.maven:maven-settings:clean:clean:default-clean (13264 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:39.074Z",
+      "end": "2014-10-31T02:26:39.289Z",
+      "duration": 430,
+      "description": "org.apache.maven:maven:validate:enforce:enforce-bytecode-version (430 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:40.542Z",
+      "end": "2014-10-31T02:26:41.059Z",
+      "duration": 2200,
+      "description": "org.apache.maven:maven:process-classes:check:check-java-1.6-compat (2200 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:27:16.349Z",
+      "end": "2014-10-31T02:27:16.409Z",
+      "duration": 37550,
+      "description": "org.apache.maven:maven-compat:process-test-resources:testResources:default-testResources (37550 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:27:16.216Z",
+      "end": "2014-10-31T02:27:16.349Z",
+      "duration": 37490,
+      "description": "org.apache.maven:maven-compat:process-classes:generate-metadata:default (37490 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:27:24.575Z",
+      "end": "2014-10-31T02:27:24.828Z",
+      "duration": 45969,
+      "description": "org.apache.maven:maven-embedder:generate-resources:process:default (45969 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:53.901Z",
+      "end": "2014-10-31T02:26:54.159Z",
+      "duration": 15300,
+      "description": "org.apache.maven:maven-repository-metadata:process-classes:check:check-java-1.6-compat (15300 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:27:25.389Z",
+      "end": "2014-10-31T02:27:25.431Z",
+      "duration": 46573,
+      "description": "org.apache.maven:maven-embedder:test-compile:testCompile:default-testCompile (46573 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:41.147Z",
+      "end": "2014-10-31T02:26:41.173Z",
+      "duration": 2314,
+      "description": "org.apache.maven:maven-model:validate:enforce:enforce-bytecode-version (2314 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:52.123Z",
+      "end": "2014-10-31T02:26:52.129Z",
+      "duration": 13270,
+      "description": "org.apache.maven:maven-settings:validate:enforce:enforce-bytecode-version (13270 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:27:24.828Z",
+      "end": "2014-10-31T02:27:24.831Z",
+      "duration": 45972,
+      "description": "org.apache.maven:maven-embedder:process-resources:resources:default-resources (45972 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:45.843Z",
+      "end": "2014-10-31T02:26:46.115Z",
+      "duration": 7256,
+      "description": "org.apache.maven:maven-artifact:test:test:default-test (7256 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:54.528Z",
+      "end": "2014-10-31T02:26:54.530Z",
+      "duration": 15672,
+      "description": "org.apache.maven:maven-aether-provider:validate:enforce:ban-known-bad-maven-versions (15672 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:57.867Z",
+      "end": "2014-10-31T02:26:57.867Z",
+      "duration": 19008,
+      "description": "org.apache.maven:maven-core:validate:enforce:ban-known-bad-maven-versions (19008 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:27:16.788Z",
+      "end": "2014-10-31T02:27:16.875Z",
+      "duration": 38016,
+      "description": "org.apache.maven:maven-compat:process-test-classes:generate-test-metadata:default (38016 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:58.115Z",
+      "end": "2014-10-31T02:26:58.245Z",
+      "duration": 19386,
+      "description": "org.apache.maven:maven-core:initialize:create-timestamp:create-noncanonicalrev (19386 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:46.399Z",
+      "end": "2014-10-31T02:26:46.525Z",
+      "duration": 7666,
+      "description": "org.apache.maven:maven-plugin-api:generate-resources:process:default (7666 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:27:14.908Z",
+      "end": "2014-10-31T02:27:14.917Z",
+      "duration": 36058,
+      "description": "org.apache.maven:maven-compat:generate-sources:xpp3-writer:standard (36058 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:53.458Z",
+      "end": "2014-10-31T02:26:53.696Z",
+      "duration": 14837,
+      "description": "org.apache.maven:maven-settings-builder:test:test:default-test (14837 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:52.607Z",
+      "end": "2014-10-31T02:26:52.617Z",
+      "duration": 13759,
+      "description": "org.apache.maven:maven-settings-builder:clean:clean:default-clean (13759 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:47.521Z",
+      "end": "2014-10-31T02:26:47.550Z",
+      "duration": 8691,
+      "description": "org.apache.maven:maven-model-builder:clean:clean:default-clean (8691 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:45.542Z",
+      "end": "2014-10-31T02:26:45.735Z",
+      "duration": 6876,
+      "description": "org.apache.maven:maven-artifact:process-classes:generate-metadata:default (6876 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:44.978Z",
+      "end": "2014-10-31T02:26:44.981Z",
+      "duration": 6122,
+      "description": "org.apache.maven:maven-artifact:process-resources:resources:default-resources (6122 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:44.022Z",
+      "end": "2014-10-31T02:26:44.025Z",
+      "duration": 5166,
+      "description": "org.apache.maven:maven-model:process-test-resources:testResources:default-testResources (5166 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:27:02.240Z",
+      "end": "2014-10-31T02:27:14.340Z",
+      "duration": 35481,
+      "description": "org.apache.maven:maven-core:test:test:default-test (35481 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:53.789Z",
+      "end": "2014-10-31T02:26:53.797Z",
+      "duration": 14938,
+      "description": "org.apache.maven:maven-repository-metadata:generate-sources:xpp3-reader:standard (14938 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:55.219Z",
+      "end": "2014-10-31T02:26:55.323Z",
+      "duration": 16465,
+      "description": "org.apache.maven:maven-aether-provider:test-compile:testCompile:default-testCompile (16465 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:47.156Z",
+      "end": "2014-10-31T02:26:47.232Z",
+      "duration": 8373,
+      "description": "org.apache.maven:maven-plugin-api:test-compile:testCompile:default-testCompile (8373 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:53.696Z",
+      "end": "2014-10-31T02:26:53.718Z",
+      "duration": 14859,
+      "description": "org.apache.maven:maven-settings-builder:package:jar:default-jar (14859 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:49.176Z",
+      "end": "2014-10-31T02:26:49.209Z",
+      "duration": 10350,
+      "description": "org.apache.maven:maven-model-builder:process-test-resources:testResources:default-testResources (10350 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:47.764Z",
+      "end": "2014-10-31T02:26:47.891Z",
+      "duration": 9032,
+      "description": "org.apache.maven:maven-model-builder:validate:check:rat-check (9032 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:27:01.158Z",
+      "end": "2014-10-31T02:27:01.306Z",
+      "duration": 22447,
+      "description": "org.apache.maven:maven-core:process-classes:main-index:default (22447 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:27:25.384Z",
+      "end": "2014-10-31T02:27:25.389Z",
+      "duration": 46530,
+      "description": "org.apache.maven:maven-embedder:process-test-resources:testResources:default-testResources (46530 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:27:24.995Z",
+      "end": "2014-10-31T02:27:25.366Z",
+      "duration": 46507,
+      "description": "org.apache.maven:maven-embedder:process-classes:check:check-java-1.6-compat (46507 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:27:24.312Z",
+      "end": "2014-10-31T02:27:24.524Z",
+      "duration": 45665,
+      "description": "org.apache.maven:maven-embedder:validate:enforce:enforce-bytecode-version (45665 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:52.187Z",
+      "end": "2014-10-31T02:26:52.196Z",
+      "duration": 13337,
+      "description": "org.apache.maven:maven-settings:generate-sources:xpp3-writer:standard (13337 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:46.182Z",
+      "end": "2014-10-31T02:26:46.342Z",
+      "duration": 7483,
+      "description": "org.apache.maven:maven-plugin-api:validate:enforce:enforce-bytecode-version (7483 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:47.550Z",
+      "end": "2014-10-31T02:26:47.763Z",
+      "duration": 8904,
+      "description": "org.apache.maven:maven-model-builder:validate:enforce:enforce-bytecode-version (8904 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:27:25.639Z",
+      "end": "2014-10-31T02:27:25.655Z",
+      "duration": 46796,
+      "description": "org.apache.maven:maven-embedder:package:jar:default-jar (46796 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:27:14.880Z",
+      "end": "2014-10-31T02:27:14.895Z",
+      "duration": 36036,
+      "description": "org.apache.maven:maven-compat:generate-sources:java:standard (36036 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:58.298Z",
+      "end": "2014-10-31T02:26:58.531Z",
+      "duration": 19672,
+      "description": "org.apache.maven:maven-core:generate-resources:process:default (19672 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:27:15.214Z",
+      "end": "2014-10-31T02:27:15.853Z",
+      "duration": 36994,
+      "description": "org.apache.maven:maven-compat:compile:compile:default-compile (36994 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:46.343Z",
+      "end": "2014-10-31T02:26:46.383Z",
+      "duration": 7524,
+      "description": "org.apache.maven:maven-plugin-api:validate:check:rat-check (7524 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:44.851Z",
+      "end": "2014-10-31T02:26:44.861Z",
+      "duration": 6002,
+      "description": "org.apache.maven:maven-artifact:clean:clean:default-clean (6002 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:53.103Z",
+      "end": "2014-10-31T02:26:53.369Z",
+      "duration": 14510,
+      "description": "org.apache.maven:maven-settings-builder:process-classes:check:check-java-1.6-compat (14510 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:47.967Z",
+      "end": "2014-10-31T02:26:47.972Z",
+      "duration": 9113,
+      "description": "org.apache.maven:maven-model-builder:process-resources:resources:default-resources (9113 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:52.178Z",
+      "end": "2014-10-31T02:26:52.187Z",
+      "duration": 13328,
+      "description": "org.apache.maven:maven-settings:generate-sources:xpp3-reader:standard (13328 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:39.289Z",
+      "end": "2014-10-31T02:26:39.299Z",
+      "duration": 440,
+      "description": "org.apache.maven:maven:validate:enforce:ban-known-bad-maven-versions (440 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:54.696Z",
+      "end": "2014-10-31T02:26:54.698Z",
+      "duration": 15839,
+      "description": "org.apache.maven:maven-aether-provider:process-resources:resources:default-resources (15839 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:27:25.737Z",
+      "end": "2014-10-31T02:27:26.046Z",
+      "duration": 47188,
+      "description": "org.apache.maven:apache-maven:validate:enforce:enforce-bytecode-version (47188 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:46.170Z",
+      "end": "2014-10-31T02:26:46.182Z",
+      "duration": 7323,
+      "description": "org.apache.maven:maven-plugin-api:clean:clean:default-clean (7323 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:27:16.409Z",
+      "end": "2014-10-31T02:27:16.788Z",
+      "duration": 37929,
+      "description": "org.apache.maven:maven-compat:test-compile:testCompile:default-testCompile (37929 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:58.292Z",
+      "end": "2014-10-31T02:26:58.298Z",
+      "duration": 19439,
+      "description": "org.apache.maven:maven-core:generate-sources:xpp3-writer:standard (19439 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:27:33.461Z",
+      "end": "2014-10-31T02:27:33.564Z",
+      "duration": 54705,
+      "description": "org.apache.maven:apache-maven:test-compile:testCompile:test-compile (54705 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:27:15.853Z",
+      "end": "2014-10-31T02:27:16.216Z",
+      "duration": 37357,
+      "description": "org.apache.maven:maven-compat:process-classes:check:check-java-1.6-compat (37357 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:54.839Z",
+      "end": "2014-10-31T02:26:55.160Z",
+      "duration": 16301,
+      "description": "org.apache.maven:maven-aether-provider:process-classes:check:check-java-1.6-compat (16301 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:48.683Z",
+      "end": "2014-10-31T02:26:48.943Z",
+      "duration": 10084,
+      "description": "org.apache.maven:maven-model-builder:process-classes:check:check-java-1.6-compat (10084 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:27:26.306Z",
+      "end": "2014-10-31T02:27:32.880Z",
+      "duration": 54021,
+      "description": "org.apache.maven:apache-maven:generate-resources:process:default (54021 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:46.525Z",
+      "end": "2014-10-31T02:26:46.528Z",
+      "duration": 7669,
+      "description": "org.apache.maven:maven-plugin-api:process-resources:resources:default-resources (7669 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:41.783Z",
+      "end": "2014-10-31T02:26:41.843Z",
+      "duration": 2984,
+      "description": "org.apache.maven:maven-model:process-resources:resources:default-resources (2984 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:52.618Z",
+      "end": "2014-10-31T02:26:52.663Z",
+      "duration": 13804,
+      "description": "org.apache.maven:maven-settings-builder:validate:enforce:enforce-bytecode-version (13804 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:27:14.895Z",
+      "end": "2014-10-31T02:27:14.908Z",
+      "duration": 36049,
+      "description": "org.apache.maven:maven-compat:generate-sources:xpp3-reader:standard (36049 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:53.416Z",
+      "end": "2014-10-31T02:26:53.419Z",
+      "duration": 14560,
+      "description": "org.apache.maven:maven-settings-builder:process-test-resources:testResources:default-testResources (14560 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:58.532Z",
+      "end": "2014-10-31T02:26:58.643Z",
+      "duration": 19784,
+      "description": "org.apache.maven:maven-core:process-resources:resources:default-resources (19784 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:41.114Z",
+      "end": "2014-10-31T02:26:41.147Z",
+      "duration": 2288,
+      "description": "org.apache.maven:maven-model:clean:clean:default-clean (2288 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:27:14.734Z",
+      "end": "2014-10-31T02:27:14.735Z",
+      "duration": 35876,
+      "description": "org.apache.maven:maven-compat:validate:enforce:ban-known-bad-maven-versions (35876 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:55.160Z",
+      "end": "2014-10-31T02:26:55.205Z",
+      "duration": 16346,
+      "description": "org.apache.maven:maven-aether-provider:process-classes:generate-metadata:default (16346 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:53.369Z",
+      "end": "2014-10-31T02:26:53.415Z",
+      "duration": 14556,
+      "description": "org.apache.maven:maven-settings-builder:process-classes:generate-metadata:default (14556 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:52.156Z",
+      "end": "2014-10-31T02:26:52.177Z",
+      "duration": 13319,
+      "description": "org.apache.maven:maven-settings:generate-sources:java:standard (13319 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:46.528Z",
+      "end": "2014-10-31T02:26:46.867Z",
+      "duration": 8008,
+      "description": "org.apache.maven:maven-plugin-api:compile:compile:default-compile (8008 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:39.021Z",
+      "end": "2014-10-31T02:26:39.074Z",
+      "duration": 215,
+      "description": "org.apache.maven:maven:clean:clean:default-clean (215 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:53.834Z",
+      "end": "2014-10-31T02:26:53.837Z",
+      "duration": 14978,
+      "description": "org.apache.maven:maven-repository-metadata:process-resources:resources:default-resources (14978 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:46.395Z",
+      "end": "2014-10-31T02:26:46.399Z",
+      "duration": 7540,
+      "description": "org.apache.maven:maven-plugin-api:generate-sources:xpp3-writer:standard (7540 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:27:32.880Z",
+      "end": "2014-10-31T02:27:33.461Z",
+      "duration": 54602,
+      "description": "org.apache.maven:apache-maven:process-classes:check:check-java-1.6-compat (54602 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:52.580Z",
+      "end": "2014-10-31T02:26:52.582Z",
+      "duration": 13723,
+      "description": "org.apache.maven:maven-settings:test-compile:testCompile:default-testCompile (13723 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:55.331Z",
+      "end": "2014-10-31T02:26:57.569Z",
+      "duration": 18710,
+      "description": "org.apache.maven:maven-aether-provider:test:test:default-test (18710 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:49.445Z",
+      "end": "2014-10-31T02:26:52.047Z",
+      "duration": 13189,
+      "description": "org.apache.maven:maven-model-builder:test:test:default-test (13189 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:46.342Z",
+      "end": "2014-10-31T02:26:46.342Z",
+      "duration": 7483,
+      "description": "org.apache.maven:maven-plugin-api:validate:enforce:ban-known-bad-maven-versions (7483 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:43.682Z",
+      "end": "2014-10-31T02:26:44.022Z",
+      "duration": 5163,
+      "description": "org.apache.maven:maven-model:process-classes:check:check-java-1.6-compat (5163 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:53.723Z",
+      "end": "2014-10-31T02:26:53.732Z",
+      "duration": 14873,
+      "description": "org.apache.maven:maven-repository-metadata:clean:clean:default-clean (14873 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:27:14.536Z",
+      "end": "2014-10-31T02:27:14.619Z",
+      "duration": 35760,
+      "description": "org.apache.maven:maven-compat:clean:clean:default-clean (35760 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:47.232Z",
+      "end": "2014-10-31T02:26:47.477Z",
+      "duration": 8618,
+      "description": "org.apache.maven:maven-plugin-api:test:test:default-test (8618 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:47.972Z",
+      "end": "2014-10-31T02:26:48.683Z",
+      "duration": 9824,
+      "description": "org.apache.maven:maven-model-builder:compile:compile:default-compile (9824 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:27:16.875Z",
+      "end": "2014-10-31T02:27:24.202Z",
+      "duration": 45343,
+      "description": "org.apache.maven:maven-compat:test:test:default-test (45343 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:57.623Z",
+      "end": "2014-10-31T02:26:57.727Z",
+      "duration": 18868,
+      "description": "org.apache.maven:maven-core:clean:clean:default-clean (18868 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:45.834Z",
+      "end": "2014-10-31T02:26:45.843Z",
+      "duration": 6984,
+      "description": "org.apache.maven:maven-artifact:process-test-classes:generate-test-metadata:default (6984 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:27:25.708Z",
+      "end": "2014-10-31T02:27:25.737Z",
+      "duration": 46878,
+      "description": "org.apache.maven:apache-maven:clean:clean:default-clean (46878 ms)",
+      "trackNum": 1,
+      "color": "green",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:27:24.525Z",
+      "end": "2014-10-31T02:27:24.575Z",
+      "duration": 45716,
+      "description": "org.apache.maven:maven-embedder:validate:check:rat-check (45716 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:57.727Z",
+      "end": "2014-10-31T02:26:57.866Z",
+      "duration": 19007,
+      "description": "org.apache.maven:maven-core:validate:enforce:enforce-bytecode-version (19007 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:27:24.202Z",
+      "end": "2014-10-31T02:27:24.268Z",
+      "duration": 45409,
+      "description": "org.apache.maven:maven-compat:package:jar:default-jar (45409 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:27:00.656Z",
+      "end": "2014-10-31T02:27:01.158Z",
+      "duration": 22299,
+      "description": "org.apache.maven:maven-core:process-classes:generate-metadata:default (22299 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    },
+    {
+      "start": "2014-10-31T02:26:54.167Z",
+      "end": "2014-10-31T02:26:54.180Z",
+      "duration": 15321,
+      "description": "org.apache.maven:maven-repository-metadata:package:jar:default-jar (15321 ms)",
+      "trackNum": 1,
+      "color": "blue",
+      "durationEvent": true
+    }
+  ]
+}
