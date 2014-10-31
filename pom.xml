@@ -1,11 +1,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>io.takari</groupId>
   <artifactId>maven-timeline</artifactId>
-  <version>1.4</version>
+  <version>1.4-sfdc</version>
   <packaging>jar</packaging>
-
+  
   <name>Maven Timeline plugin</name>
   <description>Output the timeline of a build to am html file</description>
   <url>https://github.com/dgageot/maven-timeline</url>
