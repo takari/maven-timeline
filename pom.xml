@@ -7,7 +7,7 @@
   </parent>
   <groupId>io.takari.maven</groupId>
   <artifactId>maven-timeline</artifactId>
-  <version>1.5</version>
+  <version>1.6-SNAPSHOT</version>
   
   <name>Maven Timeline plugin</name>
   <description>Output the timeline of a build to am html file</description>
@@ -61,8 +61,4 @@
       </plugin>
     </plugins>  
   </build>
-
-  <scm>
-    <tag>maven-timeline-1.5</tag>
-  </scm>
 </project>
