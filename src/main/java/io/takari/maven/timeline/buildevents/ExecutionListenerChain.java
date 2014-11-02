@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License
  */
-package net.gageot.maven.buildevents;
+package io.takari.maven.timeline.buildevents;
 
 import org.apache.maven.execution.*;
 

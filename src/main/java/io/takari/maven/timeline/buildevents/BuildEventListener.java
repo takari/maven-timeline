@@ -3,7 +3,12 @@
  * License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License
  */
-package net.gageot.maven.buildevents;
+package io.takari.maven.timeline.buildevents;
+
+import io.takari.maven.timeline.Event;
+import io.takari.maven.timeline.Timeline;
+import io.takari.maven.timeline.TimelineSerializer;
+import io.takari.maven.timeline.WebUtils;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -13,10 +18,6 @@ import java.io.Writer;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
-import net.gageot.maven.Event;
-import net.gageot.maven.Timeline;
-import net.gageot.maven.TimelineSerializer;
 
 import org.apache.maven.execution.AbstractExecutionListener;
 import org.apache.maven.execution.ExecutionEvent;
@@ -126,27 +127,39 @@ public class BuildEventListener extends AbstractExecutionListener {
     return new Execution(project.getGroupId(), project.getArtifactId(), mojo.getLifecyclePhase(), mojo.getGoal(), mojo.getExecutionId());
   }
 
-  public void report() throws IOException {
-    
-    endTime = nowInUtc();
-    
+  private void report() throws IOException {
     File path = output.getParentFile();
     if (!(path.isDirectory() || path.mkdirs())) {
       throw new IOException("Unable to create " + path);
     }
     
     Writer writer = new BufferedWriter(new FileWriter(output));    
-    Writer mavenTimelineWriter = new BufferedWriter(new FileWriter(mavenTimeline));    
     try {
       Metric.array(writer, executionMetrics.values());
-      Timeline timeline = new Timeline(startTime, endTime, Lists.newArrayList(timelineMetrics.values()));
-      TimelineSerializer.serialize(mavenTimelineWriter, timeline);
     } finally {
       writer.close();
-      mavenTimelineWriter.close();
     }
+    
+    exportTimeline();
   }
 
+  private void exportTimeline() throws IOException {
+    System.out.println("!!!!!!!!!!!!!!!!!!");
+    System.out.println("Writing maven timeline to " + mavenTimeline);
+    System.out.println("!!!!!!!!!!!!!!!!!!");
+    
+    endTime = nowInUtc();
+    WebUtils.copyResourcesToDirectory(getClass(), "timeline", mavenTimeline.getParentFile());
+    try(Writer mavenTimelineWriter = new BufferedWriter(new FileWriter(mavenTimeline))) {
+      Timeline timeline = new Timeline(startTime, endTime, Lists.newArrayList(timelineMetrics.values()));
+      TimelineSerializer.serialize(mavenTimelineWriter, timeline);      
+    }    
+  }
+   
+  //
+  //
+  //
+  
   static class Execution {
     final String groupId;
     final String artifactId;

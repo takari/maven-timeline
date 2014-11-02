@@ -1,4 +1,4 @@
-package net.gageot.maven;
+package io.takari.maven.timeline;
 
 import java.io.Writer;
 

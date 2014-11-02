@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License
  */
-package net.gageot.maven;
+package io.takari.maven.timeline;
+
+import io.takari.maven.timeline.buildevents.BuildEventListener;
+import io.takari.maven.timeline.buildevents.ExecutionListenerChain;
 
 import java.io.File;
-
-import net.gageot.maven.buildevents.BuildEventListener;
-import net.gageot.maven.buildevents.ExecutionListenerChain;
 
 import org.apache.maven.AbstractMavenLifecycleParticipant;
 import org.apache.maven.execution.ExecutionListener;
@@ -31,22 +31,19 @@ import org.joda.time.DateTimeZone;
 @Component(role = AbstractMavenLifecycleParticipant.class, hint = "buildevents")
 public class BuildEventsExtension extends AbstractMavenLifecycleParticipant {
   private static final String OUTPUT_FILE = "execution.metrics.output.file";
-
   private static final String DEFAULT_FILE_DESTINATION = "target/execution-metrics.json";
 
   @Override
   public void afterProjectsRead(MavenSession session) {
     MavenExecutionRequest request = session.getRequest();
-
     ExecutionListener original = request.getExecutionListener();
     BuildEventListener listener = new BuildEventListener(logFile(session), mavenTimelineFile(session));
     ExecutionListener chain = new ExecutionListenerChain(original, listener);
-
     request.setExecutionListener(chain);
   }
 
   private File mavenTimelineFile(MavenSession session) {
-    return new File(session.getExecutionRootDirectory(), "target/maven-timeline.json");
+    return new File(session.getExecutionRootDirectory(), "target/timeline/maven-timeline.json");
   }
   
   private File logFile(MavenSession session) {

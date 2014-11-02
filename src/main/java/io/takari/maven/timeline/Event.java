@@ -1,4 +1,4 @@
-package net.gageot.maven;
+package io.takari.maven.timeline;
 
 public class Event {
   String start;
@@ -6,8 +6,7 @@ public class Event {
   long duration;
   String description;
   long trackNum;
-  String color;
-  
+  String color;  
   boolean durationEvent = true;
 
   public Event(String description, long trackNum, String color, String start) {
