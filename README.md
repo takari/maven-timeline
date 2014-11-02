@@ -9,7 +9,7 @@ To generate a timeline for your project ddd this section to your `pom.xml`:
   <extension>
     <groupId>io.takari.maven</groupId>
     <artifactId>maven-timeline</artifactId>
-    <version>1.4</version>
+    <version>1.5</version>
   </extension>
 </extensions>
 ```
