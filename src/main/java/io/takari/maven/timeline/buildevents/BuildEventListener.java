@@ -144,10 +144,6 @@ public class BuildEventListener extends AbstractExecutionListener {
   }
 
   private void exportTimeline() throws IOException {
-    System.out.println("!!!!!!!!!!!!!!!!!!");
-    System.out.println("Writing maven timeline to " + mavenTimeline);
-    System.out.println("!!!!!!!!!!!!!!!!!!");
-    
     endTime = nowInUtc();
     WebUtils.copyResourcesToDirectory(getClass(), "timeline", mavenTimeline.getParentFile());
     try(Writer mavenTimelineWriter = new BufferedWriter(new FileWriter(mavenTimeline))) {
