@@ -79,7 +79,19 @@ public class BuildEventListener extends AbstractExecutionListener {
       threadNumToColour.put(threadId, colour);
     }
     executionMetrics.put(key, new Metric(key, Thread.currentThread().getId(), millis()));
-    timelineMetrics.put(key, new Event(key.toString(), threadTrackNum, colours[colour], nowInUtc()));
+    timelineMetrics.put(
+      key,
+      new Event(
+        key.toString(),
+        threadTrackNum,
+        colours[colour],
+        nowInUtc(),
+        key.groupId,
+        key.artifactId,
+        key.phase,
+        key.goal
+      )
+    );
   }
 
   String nowInUtc() {
