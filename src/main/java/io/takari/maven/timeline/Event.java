@@ -2,8 +2,8 @@ package io.takari.maven.timeline;
 
 @SuppressWarnings("FieldCanBeLocal") // needed for serialization
 public class Event {
-  private final String start;
-  private String end;
+  private final long start;
+  private long end;
   private long duration;
   private String description;
   private final long trackNum;
@@ -17,7 +17,7 @@ public class Event {
   public Event(String description,
                long trackNum,
                String color,
-               String start,
+               long start,
                String groupId,
                String artifactId,
                String phase,
@@ -32,7 +32,7 @@ public class Event {
     this.goal = goal;
   }
 
-  public void setEnd(String end) {
+  public void setEnd(long end) {
     this.end = end;
   }
 

@@ -42,8 +42,8 @@ public class BuildEventListener extends AbstractExecutionListener {
   private final Map<Long, Integer> threadNumToColour = new ConcurrentHashMap<Long, Integer>();
   private long trackNum = 1;
 
-  String startTime;
-  String endTime;
+  long startTime;
+  long endTime;
 
   private static String[] colours = new String[] {
       "blue", "green"
@@ -94,8 +94,8 @@ public class BuildEventListener extends AbstractExecutionListener {
     );
   }
 
-  String nowInUtc() {
-    return new DateTime(DateTimeZone.UTC).toString();
+  long nowInUtc() {
+    return new DateTime(DateTimeZone.UTC).getMillis();
   }
 
   @Override
@@ -120,7 +120,7 @@ public class BuildEventListener extends AbstractExecutionListener {
       return;
     }
     metric.setEnd(millis());
-    timelineMetric.setEnd(new DateTime(DateTimeZone.UTC).toString());
+    timelineMetric.setEnd(new DateTime(DateTimeZone.UTC).getMillis());
     timelineMetric.setDuration(metric.end - metric.start);
   }
 

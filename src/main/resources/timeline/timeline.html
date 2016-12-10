@@ -1,63 +1,12 @@
 <html>
-  <head>
-    <title>Maven Timeline</title>
-    <script>
-      var Timeline_ajax_url="assets/simile-ajax-api.js";
-      var Timeline_urlPrefix='assets/';
-    </script>
-    <script src="maven-timeline.js" type="text/javascript"></script>
-    <script src="assets/timeline-api.js" type="text/javascript"></script>
-    <script src="https://code.jquery.com/jquery-2.1.1.min.js" type="text/javascript"></script>
-    <script>
-      var tl;
-      function onLoad() {
-      Timeline.DefaultEventSource.Event.prototype.fillInfoBubble = function (elmt, theme, labeller) {
-        var doc = elmt.ownerDocument;
-        var title = this.getText();
-        var link = this.getLink();
-        var image = this.getImage();
-
-        if (image != null) {
-          var img = doc.createElement("img");
-          img.src = image;
-          theme.event.bubble.imageStyler(img);
-          elmt.appendChild(img);
-        }
-
-        var divTitle = doc.createElement("div");
-        var textTitle = doc.createTextNode(title);
-        if (link != null) {
-          var a = doc.createElement("a");
-          a.href = link;
-          a.appendChild(textTitle);
-          divTitle.appendChild(a);
-        } else {
-          divTitle.appendChild(textTitle);
-        }
-
-        theme.event.bubble.titleStyler(divTitle);
-        //elmt.appendChild(divTitle);
-        var divBody = doc.createElement("div");
-        this.fillDescription(divBody);
-        theme.event.bubble.bodyStyler(divBody);
-        elmt.appendChild(divBody);
-
-        // This is where they define the times in the bubble
-        //var divTime = doc.createElement("div");
-        //divTime.innerHTML = start + "<br />" + end;
-        //elmt.appendChild(divTime);
-
-        var divWiki = doc.createElement("div");
-        this.fillWikiInfo(divWiki);
-        theme.event.bubble.wikiStyler(divWiki);
-        elmt.appendChild(divWiki);
-      }
-
-      var eventSource = new Timeline.DefaultEventSource(0);
-      var theme = Timeline.ClassicTheme.create();
-      theme.event.bubble.width = 350;
-      theme.event.bubble.height = 300;
-
+<head>
+  <title>Maven Timeline</title>
+  <script src="maven-timeline.js" type="text/javascript"></script>
+  <script src="database.js" type="text/javascript"></script>
+  <script src="timeline.js" type="text/javascript"></script>
+  <script src="https://code.jquery.com/jquery-2.1.1.min.js" type="text/javascript"></script>
+  <script>
+    function onLoad() {
       var timelineData = window.timelineData;
       if(timelineData == undefined) {
         $.ajax({
@@ -68,60 +17,47 @@
           timelineData = data
         });
       }
+      timeLineDb = new TimeLineDb(timelineData);
+      timeLine = new TimeLine(timelineData);
 
-      var start = Timeline.DateTime.parseGregorianDateTime(timelineData['start'])
-      var end = Timeline.DateTime.parseGregorianDateTime(timelineData['end'])
+      timeLine.render(2);
 
-      theme.timeline_start = start;
-      theme.timeline_stop  = end;
-
-      var bandInfos = [
-        Timeline.createBandInfo({
-          width:          "60%",
-          intervalUnit:   Timeline.DateTime.SECOND,
-          intervalPixels: 300,
-          eventSource:    eventSource,
-          date:           start,
-          theme:          theme,
-          layout:         'original'  // original, overview, detailed
-        }),
-        Timeline.createBandInfo({
-          width:          "40%",
-          intervalUnit:   Timeline.DateTime.MINUTE,
-          intervalPixels: 400,
-          eventSource:    eventSource,
-          date:           start,
-          theme:          theme,
-          layout:         'original'  // original, overview, detailed
-        })
-      ];
-
-      bandInfos[1].syncWith = 0;
-      bandInfos[1].highlight = true;
-      tl = Timeline.create(document.getElementById("tl"), bandInfos, Timeline.HORIZONTAL);
-      eventSource.loadJSON(timelineData, ".")
+      timeLineDb.getPhases(function(tx, rs) {
+        for (var i = 0; i < rs.rows.length; i++) {
+          var phase = rs.rows.item(i).phase;
+          timeLineDb.getTotalPhaseDuration(phase, function (duration, phase) {
+                var test = document.createElement("div");
+                test.innerText = phase + " " + duration;
+                document.getElementsByTagName("aside")[0].appendChild(test);
+            });
+        }
+      });
+      timeLineDb.getGoals(function(tx, rs) {
+        for (var i = 0; i < rs.rows.length; i++) {
+          var goal = rs.rows.item(i).goal;
+          timeLineDb.getTotalGoalDuration(goal, function (duration, goal) {
+                var test = document.createElement("div");
+                test.innerText = goal + " " + duration;
+                document.getElementsByTagName("aside")[0].appendChild(test);
+            });
+        }
+      });
+      timeLineDb.getArtifactIds(function(tx, rs) {
+        for (var i = 0; i < rs.rows.length; i++) {
+          var artId = rs.rows.item(i).artifactId;
+          timeLineDb.getTotalArtifactDuration(artId, function (duration, artId) {
+                var test = document.createElement("div");
+                test.innerText = artId + " " + duration;
+                document.getElementsByTagName("aside")[0].appendChild(test);
+            });
+        }
+      });
     }
-
-    var resizeTimerID = null;
-    function onResize() {
-      if (resizeTimerID == null) {
-        resizeTimerID = window.setTimeout(function() {
-          resizeTimerID = null;
-          tl.layout();
-        }, 500);
-      }
-    }
-    </script>
-  </head>
-  <body onload="onLoad();" onresize="onResize();">
-    <div id="wrap">
-      <div id="branding">
-        <a href="http://takari.io/" target="_blank"><img src="assets/images/takari_logo.png" alt="Takari" width="" height="" /></a>
-        <p>Learn more about future developments of Apache Maven at the <a href="https://plus.google.com/u/0/113247990055413254822/posts" target="_blank">Maven Developer Hangout</a></p>
-      </div>
-      <div id="content">
-        <div id="tl" class="timeline-default" style="height: 100%;"></div>
-      </div>
-    </div>
-  </body>
+  </script>
+  <link rel="stylesheet" type="text/css" href="style.css"></link>
+</head>
+<body onload="onLoad();">
+<aside></aside>
+<main></main>
+</body>
 </html>
