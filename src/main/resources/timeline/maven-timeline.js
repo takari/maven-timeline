@@ -1,4 +1,4 @@
-{
+window.timelineData = {
   "dateTimeFormat": "iso8601",
   "start": "2014-11-02T04:12:10.038Z",
   "end": "2014-11-02T04:13:01.579Z",
@@ -1777,4 +1777,4 @@
       "durationEvent": true
     }
   ]
-}
+};
