@@ -109,7 +109,7 @@ public class BuildEventListener extends AbstractExecutionListener {
     }
     metric.setEnd(millis());
     timelineMetric.setEnd(new DateTime(DateTimeZone.UTC).toString());
-    timelineMetric.setDuration(millis());
+    timelineMetric.setDuration(metric.end - metric.start);
   }
 
   @Override
