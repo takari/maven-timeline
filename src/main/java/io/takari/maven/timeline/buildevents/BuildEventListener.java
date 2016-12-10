@@ -132,14 +132,14 @@ public class BuildEventListener extends AbstractExecutionListener {
     if (!(path.isDirectory() || path.mkdirs())) {
       throw new IOException("Unable to create " + path);
     }
-    
-    Writer writer = new BufferedWriter(new FileWriter(output));    
+
+    Writer writer = new BufferedWriter(new FileWriter(output));
     try {
       Metric.array(writer, executionMetrics.values());
     } finally {
       writer.close();
     }
-    
+
     exportTimeline();
   }
 
@@ -148,14 +148,16 @@ public class BuildEventListener extends AbstractExecutionListener {
     WebUtils.copyResourcesToDirectory(getClass(), "timeline", mavenTimeline.getParentFile());
     try(Writer mavenTimelineWriter = new BufferedWriter(new FileWriter(mavenTimeline))) {
       Timeline timeline = new Timeline(startTime, endTime, Lists.newArrayList(timelineMetrics.values()));
-      TimelineSerializer.serialize(mavenTimelineWriter, timeline);      
-    }    
+      mavenTimelineWriter.write("window.timelineData = ");
+      TimelineSerializer.serialize(mavenTimelineWriter, timeline);
+      mavenTimelineWriter.write(";");
+    }
   }
-   
+
   //
   //
   //
-  
+
   static class Execution {
     final String groupId;
     final String artifactId;

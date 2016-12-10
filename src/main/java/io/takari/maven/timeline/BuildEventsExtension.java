@@ -43,9 +43,9 @@ public class BuildEventsExtension extends AbstractMavenLifecycleParticipant {
   }
 
   private File mavenTimelineFile(MavenSession session) {
-    return new File(session.getExecutionRootDirectory(), "target/timeline/maven-timeline.json");
+    return new File(session.getExecutionRootDirectory(), "target/timeline/maven-timeline.js");
   }
-  
+
   private File logFile(MavenSession session) {
     String path = session.getUserProperties().getProperty(OUTPUT_FILE, DEFAULT_FILE_DESTINATION);
     if (new File(path).isAbsolute()) {
