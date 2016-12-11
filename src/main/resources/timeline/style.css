@@ -2,25 +2,41 @@
 * {
   box-sizing: border-box;
 }
-body {
-  margin: 0;
+
+html {
+  line-height: 1.5;
+  font-family: "Roboto", sans-serif;
+  font-weight: normal;
+  color: rgba(0,0,0,0.85);
 }
 
-main {
-  width: 100%;
-  height: 200px;
-  display: block;
-  overflow: auto;
+body {
+  margin: 0;
+  font-family: "Roboto", sans-serif;
+  font-size: 15px;
+  background-color: #fafafa;
+}
+
+main,
+aside {
+  padding: 20px;
+}
+
+h1, h2 {
+  font-weight:normal;
+}
+
+aside {
+  display: flex;
 }
 
 .track {
   position: relative;
-  height: 28px;
-  margin: 5px;
+  height: 80px;
 }
 .event {
   position: absolute;
-  padding: 5px;
+  padding: 20px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -35,8 +51,42 @@ main {
 }
 
 .event.green {
-  background-color: green;
+  color: #757575;
+  background-color: #fff;
+  z-index: 2;
+  box-shadow: 0 8px 10px 1px rgba(0,0,0,0.14),0 3px 14px 2px rgba(0,0,0,0.12),0 5px 5px -3px rgba(0,0,0,0.3);
 }
 .event.blue {
-  background-color: blue;
+  color: #757575;
+  background-color: #f4f4f4;
+  z-index: 1;
+  box-shadow: 0 4px 5px 0 rgba(0,0,0,0.14),0 1px 10px 0 rgba(0,0,0,0.12),0 2px 4px -1px rgba(0,0,0,0.3);
+}
+
+#timeLineContainer {
+  height: 250px;
+  padding: 20px;
+  display: block;
+  overflow: auto;
+  box-shadow: 0 4px 5px 0 rgba(0,0,0,0.14),0 1px 10px 0 rgba(0,0,0,0.12),0 2px 4px -1px rgba(0,0,0,0.3);
+}
+
+.summary {
+  box-shadow: 0 4px 5px 0 rgba(0,0,0,0.14),0 1px 10px 0 rgba(0,0,0,0.12),0 2px 4px -1px rgba(0,0,0,0.3);
+  display: inline-block;
+  background-color: #fff;
+  padding: 20px;
+  margin: 20px;
+}
+
+.summary div:not(:last-child) {
+  border-bottom: 1px solid #eee;
+}
+
+.summary span:last-child {
+  float: right;
+}
+
+.summary span:last-child:after {
+  content: " ms"
 }

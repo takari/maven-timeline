@@ -8,13 +8,17 @@ function TimeLine(timelineData) {
       var startTime = event.start;
       var endTime = event.end;
 
+      if(event.duration < 50) {
+        continue;
+      }
+
       var container = document.getElementById(event.trackNum);
 
       if(container == undefined) {
         container = document.createElement("div");
         container.setAttribute("id", event.trackNum);
         container.setAttribute("class", "track");
-        document.getElementsByTagName("main")[0].appendChild(container);
+        document.getElementById("timeLineContainer").appendChild(container);
       }
 
       var div = document.createElement("div");

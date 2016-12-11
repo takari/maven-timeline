@@ -47,6 +47,11 @@ function TimeLineDb(timelineData) {
       tx.executeSql("select artifactId from events group by artifactId", [], renderFunc, errorHandler);
     });
   };
+  this.getTracks = function(renderFunc) {
+    db.transaction(function(tx) {
+      tx.executeSql("select trackNum from events group by trackNum", [], renderFunc, errorHandler);
+    });
+  };
   this.getTotalPhaseDuration = function(phase, renderFunc) {
     db.transaction(function(tx) {
       tx.executeSql("select sum(duration) from events where phase is ?", [phase], function (tx, rs) {
@@ -65,6 +70,13 @@ function TimeLineDb(timelineData) {
     db.transaction(function(tx) {
       tx.executeSql("select sum(duration) from events where artifactId is ?", [artifactId], function (tx, rs) {
         renderFunc(rs.rows.item(0)["sum(duration)"], artifactId);
+      }, errorHandler);
+    });
+  };
+  this.getTotalTrackDuration = function(track, renderFunc) {
+    db.transaction(function(tx) {
+      tx.executeSql("select sum(duration) from events where trackNum is ?", [track], function (tx, rs) {
+        renderFunc(rs.rows.item(0)["sum(duration)"], track);
       }, errorHandler);
     });
   };
