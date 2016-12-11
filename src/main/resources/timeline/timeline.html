@@ -6,6 +6,11 @@
   <script src="timeline.js" type="text/javascript"></script>
   <script src="https://code.jquery.com/jquery-2.1.1.min.js" type="text/javascript"></script>
 
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <!--<link rel="stylesheet" href="/resources/demos/style.css">-->
+  <!--<script src="https://code.jquery.com/jquery-1.12.4.js"></script>-->
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
   <!-- Compiled and minified CSS -->
   <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/css/materialize.min.css">-->
 
@@ -29,7 +34,7 @@
 
       timeLine.render(2);
 
-      var cardTitles = ["Summary by phase","Summary by goal","Summary by artifact","Summary by track"];
+      var cardTitles = ["Controls","Summary by phase","Summary by goal","Summary by artifact","Summary by track"];
 
       for(var i = 0; i < cardTitles.length; i++) {
         var summary = document.createElement("div");
@@ -53,7 +58,7 @@
             var container = document.createElement("div");
             container.appendChild(elem("span", phase));
             container.appendChild(elem("span", duration));
-            document.getElementsByClassName("summary")[0].appendChild(container);
+            document.getElementsByClassName("summary")[1].appendChild(container);
             });
         }
       });
@@ -64,7 +69,7 @@
             var container = document.createElement("div");
             container.appendChild(elem("span", goal));
             container.appendChild(elem("span", duration));
-            document.getElementsByClassName("summary")[1].appendChild(container);
+            document.getElementsByClassName("summary")[2].appendChild(container);
             });
         }
       });
@@ -75,7 +80,7 @@
             var container = document.createElement("div");
             container.appendChild(elem("span", artId));
             container.appendChild(elem("span", duration));
-            document.getElementsByClassName("summary")[2].appendChild(container);
+            document.getElementsByClassName("summary")[3].appendChild(container);
             });
         }
       });
@@ -86,17 +91,32 @@
             var container = document.createElement("div");
             container.appendChild(elem("span", track));
             container.appendChild(elem("span", duration));
-            document.getElementsByClassName("summary")[3].appendChild(container);
+            document.getElementsByClassName("summary")[4].appendChild(container);
             });
         }
       });
+
+      var sliderContainer = document.createElement("div");
+      var slider = document.createElement("div");
+      slider.setAttribute("id", "zoomSlider");
+      sliderContainer.appendChild(elem("span", "Zoom"));
+      sliderContainer.appendChild(slider);
+      document.getElementsByClassName("summary")[0].appendChild(sliderContainer);
+      $( function() {
+        $( "#zoomSlider" ).slider({min:1, max:250, step: 1, value: 2,
+          change: function(ev, ui) {
+          timeLine.render(ui.value);
+        }});
+      } );
     }
   </script>
   <link rel="stylesheet" type="text/css" href="style.css"></link>
 </head>
 <body onload="onLoad();">
-<main>
+<header>
   <h1>Time line</h1>
+</header>
+<main>
   <div id="timeLineContainer"></div>
 </main>
 <aside></aside>

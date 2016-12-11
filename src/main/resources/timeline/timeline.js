@@ -1,7 +1,26 @@
 function TimeLine(timelineData) {
+
+  function renderTimeLabel(currentTime, sessionStartTime, zoomFactor, rootContainer) {
+    var timeLabel = document.createElement("div");
+    timeLabel.setAttribute("class", "timeLabel");
+    var date = new Date(currentTime);
+    timeLabel.innerText = date.getUTCHours() + ":" + date.getUTCMinutes();
+    if(zoomFactor < 10) {
+      timeLabel.innerText = timeLabel.innerText + ":" + date.getUTCSeconds();
+    }
+    var left = normalize(sessionStartTime, currentTime, zoomFactor);
+    var style = "left: " + left + "px;";
+    timeLabel.setAttribute("style", style);
+    rootContainer.appendChild(timeLabel);
+  }
+
   this.render = function(zoomFactor) {
+    // console.log(zoomFactor);
     var sessionStartTime = timelineData.start;
     var sessionEndTime = timelineData.end;
+
+    var rootContainer = document.getElementById("timeLineContainer");
+    rootContainer.innerHTML = "";
 
     for(var index = 0; index < timelineData.events.length; index++) {
       var event = timelineData.events[index];
@@ -18,7 +37,7 @@ function TimeLine(timelineData) {
         container = document.createElement("div");
         container.setAttribute("id", event.trackNum);
         container.setAttribute("class", "track");
-        document.getElementById("timeLineContainer").appendChild(container);
+        rootContainer.appendChild(container);
       }
 
       var div = document.createElement("div");
@@ -34,6 +53,18 @@ function TimeLine(timelineData) {
       div.setAttribute("style", style);
       div.setAttribute("class", "event " + event.color);
       div.setAttribute("title", event.description);
+    }
+
+    renderTimeLabel(sessionStartTime, sessionStartTime, zoomFactor, rootContainer);
+
+    var stepSeconds = 60;
+
+    if(zoomFactor < 10) {
+      stepSeconds = 1;
+    }
+
+    for(var currentTime = sessionStartTime - (sessionStartTime % (1000*stepSeconds)); currentTime < sessionEndTime; currentTime += (1000*stepSeconds) ) {
+      renderTimeLabel(currentTime, sessionStartTime, zoomFactor, rootContainer);
     }
   };
 
