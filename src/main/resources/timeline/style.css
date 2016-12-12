@@ -28,12 +28,18 @@ h1, h2 {
 
 aside {
   display: flex;
+  flex-wrap: wrap;
 }
 
 header {
   padding: 10px 20px;
   background-color: #fff;
   box-shadow: 0 8px 10px 1px rgba(0,0,0,0.14),0 3px 14px 2px rgba(0,0,0,0.12),0 5px 5px -3px rgba(0,0,0,0.3);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 999;
 }
 
 header > h1 {
@@ -52,6 +58,7 @@ header > h1 {
   white-space: nowrap;
 }
 
+header > .groupId:after,
 .event > span:not(:last-child):after {
   content: ":";
 }
@@ -74,6 +81,7 @@ header > h1 {
 }
 
 #timeLineContainer {
+  margin-top: 100px;
   height: 250px;
   padding: 30px 0;
   position: relative;
@@ -88,6 +96,8 @@ header > h1 {
   background-color: #fff;
   padding: 20px;
   margin: 20px;
+  min-width: 300px;
+  /* display: flex; */
 }
 
 .summary div:not(:last-child) {

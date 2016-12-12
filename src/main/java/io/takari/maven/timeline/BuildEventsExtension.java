@@ -37,7 +37,7 @@ public class BuildEventsExtension extends AbstractMavenLifecycleParticipant {
   public void afterProjectsRead(MavenSession session) {
     MavenExecutionRequest request = session.getRequest();
     ExecutionListener original = request.getExecutionListener();
-    BuildEventListener listener = new BuildEventListener(logFile(session), mavenTimelineFile(session));
+    BuildEventListener listener = new BuildEventListener(logFile(session), mavenTimelineFile(session), session.getCurrentProject().getArtifactId(), session.getCurrentProject().getGroupId());
     ExecutionListener chain = new ExecutionListenerChain(original, listener);
     request.setExecutionListener(chain);
   }

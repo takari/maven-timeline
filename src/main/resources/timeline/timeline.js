@@ -1,17 +1,35 @@
 function TimeLine(timelineData) {
 
+  addProperty(document.getElementsByTagName("header")[0], timelineData, "groupId");
+  addProperty(document.getElementsByTagName("header")[0], timelineData, "artifactId");
+
+  function twoDigits(num) {
+    if(num < 10) return "0" + num;
+    else return num;
+  }
+
   function renderTimeLabel(currentTime, sessionStartTime, zoomFactor, rootContainer) {
     var timeLabel = document.createElement("div");
     timeLabel.setAttribute("class", "timeLabel");
     var date = new Date(currentTime);
-    timeLabel.innerText = date.getUTCHours() + ":" + date.getUTCMinutes();
+    timeLabel.innerText = date.getUTCHours() + ":" + twoDigits(date.getUTCMinutes());
     if(zoomFactor < 10) {
-      timeLabel.innerText = timeLabel.innerText + ":" + date.getUTCSeconds();
+      timeLabel.innerText = timeLabel.innerText + ":" + twoDigits(date.getUTCSeconds());
     }
     var left = normalize(sessionStartTime, currentTime, zoomFactor);
     var style = "left: " + left + "px;";
     timeLabel.setAttribute("style", style);
     rootContainer.appendChild(timeLabel);
+  }
+
+  function description(event) {
+    return event.groupId + ":" +
+      event.artifactId + ":" +
+      event.artifactId + ":" +
+      event.phase + ":" +
+      event.goal + ":" +
+      event.id + "(" +
+      event.duration + "ms)";
   }
 
   this.render = function(zoomFactor) {
@@ -27,13 +45,13 @@ function TimeLine(timelineData) {
       var startTime = event.start;
       var endTime = event.end;
 
-      if(event.duration < 50) {
+      if (event.duration < 50) {
         continue;
       }
 
       var container = document.getElementById(event.trackNum);
 
-      if(container == undefined) {
+      if (container == undefined) {
         container = document.createElement("div");
         container.setAttribute("id", event.trackNum);
         container.setAttribute("class", "track");
@@ -47,12 +65,15 @@ function TimeLine(timelineData) {
       addProperty(div, event, "phase");
       addProperty(div, event, "goal");
       addProperty(div, event, "duration");
+      if (event.id.indexOf("default-" != 0)) {
+        addProperty(div, event, "id");
+      }
       var left = normalize(sessionStartTime, startTime, zoomFactor);
       var width = normalize(endTime, startTime, zoomFactor);
       var style = "width: " + width + "px; left: " + left + "px;";
       div.setAttribute("style", style);
       div.setAttribute("class", "event " + event.color);
-      div.setAttribute("title", event.description);
+      div.setAttribute("title", description(event));
     }
 
     renderTimeLabel(sessionStartTime, sessionStartTime, zoomFactor, rootContainer);

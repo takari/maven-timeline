@@ -1,35 +1,35 @@
 package io.takari.maven.timeline;
 
-@SuppressWarnings("FieldCanBeLocal") // needed for serialization
+@SuppressWarnings({"FieldCanBeLocal", "unused"}) // needed for serialization
 public class Event {
+
   private final long start;
   private long end;
   private long duration;
-  private String description;
   private final long trackNum;
   private final String color;
   private final String groupId;
   private final String artifactId;
   private final String phase;
   private final String goal;
-  boolean durationEvent = true;
+  private final String id;
 
-  public Event(String description,
-               long trackNum,
+  public Event(long trackNum,
                String color,
                long start,
                String groupId,
                String artifactId,
                String phase,
-               String goal) {
+               String goal,
+               String id) {
     this.start = start;
-    this.description = description;
     this.trackNum = trackNum;
     this.color = color;
     this.groupId = groupId;
     this.artifactId = artifactId;
     this.phase = phase;
     this.goal = goal;
+    this.id = id;
   }
 
   public void setEnd(long end) {
@@ -38,6 +38,5 @@ public class Event {
 
   public void setDuration(long duration) {
     this.duration = duration;
-    this.description = this.description + " (" + duration + " ms)";
   }
 }

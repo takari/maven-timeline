@@ -32,7 +32,15 @@
       timeLineDb = new TimeLineDb(timelineData);
       timeLine = new TimeLine(timelineData);
 
-      timeLine.render(2);
+      timeLineDb.getTrackCount(function(count) {
+        document.getElementById("timeLineContainer").setAttribute("style", "height:" + (40 + ((count+1) * 80)) + "px");
+      });
+
+      var zoomMin = 1;
+      var zoomMax = Math.max(zoomMin, (timelineData.end - timelineData.start) / 500);
+      var zoomDefault = Math.max(zoomMin, zoomMax / 3);
+
+      timeLine.render(zoomDefault);
 
       var cardTitles = ["Controls","Summary by phase","Summary by goal","Summary by artifact","Summary by track"];
 
@@ -51,49 +59,29 @@
         return element;
       }
 
-      timeLineDb.getPhases(function(tx, rs) {
-        for (var i = 0; i < rs.rows.length; i++) {
-          var phase = rs.rows.item(i).phase;
-          timeLineDb.getTotalPhaseDuration(phase, function (duration, phase) {
-            var container = document.createElement("div");
-            container.appendChild(elem("span", phase));
-            container.appendChild(elem("span", duration));
-            document.getElementsByClassName("summary")[1].appendChild(container);
-            });
-        }
+      timeLineDb.getTotalPhaseDuration(function (phase, duration) {
+        var container = document.createElement("div");
+        container.appendChild(elem("span", phase));
+        container.appendChild(elem("span", duration));
+        document.getElementsByClassName("summary")[1].appendChild(container);
       });
-      timeLineDb.getGoals(function(tx, rs) {
-        for (var i = 0; i < rs.rows.length; i++) {
-          var goal = rs.rows.item(i).goal;
-          timeLineDb.getTotalGoalDuration(goal, function (duration, goal) {
-            var container = document.createElement("div");
-            container.appendChild(elem("span", goal));
-            container.appendChild(elem("span", duration));
-            document.getElementsByClassName("summary")[2].appendChild(container);
-            });
-        }
+      timeLineDb.getTotalGoalDuration(function (goal, duration) {
+        var container = document.createElement("div");
+        container.appendChild(elem("span", goal));
+        container.appendChild(elem("span", duration));
+        document.getElementsByClassName("summary")[2].appendChild(container);
       });
-      timeLineDb.getArtifactIds(function(tx, rs) {
-        for (var i = 0; i < rs.rows.length; i++) {
-          var artId = rs.rows.item(i).artifactId;
-          timeLineDb.getTotalArtifactDuration(artId, function (duration, artId) {
-            var container = document.createElement("div");
-            container.appendChild(elem("span", artId));
-            container.appendChild(elem("span", duration));
-            document.getElementsByClassName("summary")[3].appendChild(container);
-            });
-        }
+      timeLineDb.getTotalArtifactDuration(function (artId, duration) {
+        var container = document.createElement("div");
+        container.appendChild(elem("span", artId));
+        container.appendChild(elem("span", duration));
+        document.getElementsByClassName("summary")[3].appendChild(container);
       });
-      timeLineDb.getTracks(function(tx, rs) {
-        for (var i = 0; i < rs.rows.length; i++) {
-          var track = rs.rows.item(i).trackNum;
-          timeLineDb.getTotalTrackDuration(track, function (duration, track) {
-            var container = document.createElement("div");
-            container.appendChild(elem("span", track));
-            container.appendChild(elem("span", duration));
-            document.getElementsByClassName("summary")[4].appendChild(container);
-            });
-        }
+      timeLineDb.getTotalTrackDuration(function (track, duration) {
+        var container = document.createElement("div");
+        container.appendChild(elem("span", track));
+        container.appendChild(elem("span", duration));
+        document.getElementsByClassName("summary")[4].appendChild(container);
       });
 
       var sliderContainer = document.createElement("div");
@@ -103,7 +91,7 @@
       sliderContainer.appendChild(slider);
       document.getElementsByClassName("summary")[0].appendChild(sliderContainer);
       $( function() {
-        $( "#zoomSlider" ).slider({min:1, max:250, step: 1, value: 2,
+        $( "#zoomSlider" ).slider({min:zoomMin, max:zoomMax, step: 1, value: zoomDefault,
           change: function(ev, ui) {
           timeLine.render(ui.value);
         }});

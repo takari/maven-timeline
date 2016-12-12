@@ -34,6 +34,8 @@ import com.google.common.collect.Lists;
 
 public class BuildEventListener extends AbstractExecutionListener {
   private final File mavenTimeline;
+  private final String artifactId;
+  private final String groupId;
   private final File output;
   private final long start;
   private final Map<Execution, Metric> executionMetrics = new ConcurrentHashMap<Execution, Metric>();
@@ -49,9 +51,11 @@ public class BuildEventListener extends AbstractExecutionListener {
       "blue", "green"
   };
 
-  public BuildEventListener(File output, File mavenTimeline) {
+  public BuildEventListener(File output, File mavenTimeline, String artifactId, String groupId) {
     this.output = output;
     this.mavenTimeline = mavenTimeline;
+    this.artifactId = artifactId;
+    this.groupId = groupId;
     this.start = System.currentTimeMillis();
     this.startTime = nowInUtc();
   }
@@ -82,14 +86,14 @@ public class BuildEventListener extends AbstractExecutionListener {
     timelineMetrics.put(
       key,
       new Event(
-        key.toString(),
         threadTrackNum,
         colours[colour],
         nowInUtc(),
         key.groupId,
         key.artifactId,
         key.phase,
-        key.goal
+        key.goal,
+        key.id
       )
     );
   }
@@ -159,7 +163,7 @@ public class BuildEventListener extends AbstractExecutionListener {
     endTime = nowInUtc();
     WebUtils.copyResourcesToDirectory(getClass(), "timeline", mavenTimeline.getParentFile());
     try(Writer mavenTimelineWriter = new BufferedWriter(new FileWriter(mavenTimeline))) {
-      Timeline timeline = new Timeline(startTime, endTime, Lists.newArrayList(timelineMetrics.values()));
+      Timeline timeline = new Timeline(startTime, endTime, groupId, artifactId, Lists.newArrayList(timelineMetrics.values()));
       mavenTimelineWriter.write("window.timelineData = ");
       TimelineSerializer.serialize(mavenTimelineWriter, timeline);
       mavenTimelineWriter.write(";");
