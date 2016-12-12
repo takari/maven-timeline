@@ -125,3 +125,7 @@ header > .groupId:after,
 #zoomSlider span:after {
   content: "";
 }
+
+.ui-checkboxradio-label {
+  margin-top: 10px;
+}

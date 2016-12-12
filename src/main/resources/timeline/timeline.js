@@ -64,10 +64,10 @@ function TimeLine(timelineData) {
       addProperty(div, event, "artifactId");
       addProperty(div, event, "phase");
       addProperty(div, event, "goal");
-      addProperty(div, event, "duration");
       if (event.id.indexOf("default-" != 0)) {
         addProperty(div, event, "id");
       }
+      addProperty(div, event, "duration");
       var left = normalize(sessionStartTime, startTime, zoomFactor);
       var width = normalize(endTime, startTime, zoomFactor);
       var style = "width: " + width + "px; left: " + left + "px;";

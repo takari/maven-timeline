@@ -89,13 +89,59 @@
       slider.setAttribute("id", "zoomSlider");
       sliderContainer.appendChild(elem("span", "Zoom"));
       sliderContainer.appendChild(slider);
-      document.getElementsByClassName("summary")[0].appendChild(sliderContainer);
+      var controlsContainer = document.getElementsByClassName("summary")[0];
+      controlsContainer.appendChild(sliderContainer);
       $( function() {
         $( "#zoomSlider" ).slider({min:zoomMin, max:zoomMax, step: 1, value: zoomDefault,
           change: function(ev, ui) {
           timeLine.render(ui.value);
         }});
       } );
+
+      appendCssClassToggle(controlsContainer, "groupId");
+      appendCssClassToggle(controlsContainer, "artifactId");
+      appendCssClassToggle(controlsContainer, "goal");
+      appendCssClassToggle(controlsContainer, "phase");
+      appendCssClassToggle(controlsContainer, "id");
+      appendCssClassToggle(controlsContainer, "duration");
+
+      function appendCssClassToggle(controlsContainer, className) {
+          var label = document.createElement("label");
+          var input = document.createElement("input");
+          var name = "checkbox-nested-" + className;
+
+          input.setAttribute("type", "checkbox");
+          input.setAttribute("name", name);
+          input.setAttribute("id", name);
+          input.setAttribute("checked", true);
+          input.setAttribute("data-title", className);
+          label.setAttribute("for", name);
+
+          label.innerText = className;
+          label.appendChild(input);
+          controlsContainer.appendChild(label);
+
+          $( function() {
+            $( "#"+name ).checkboxradio({
+              icon: false,
+              value: true
+            });
+          } );
+          $( "#"+name ).on( "change", function(e) {
+              console.log(e.target.checked);
+              var attribute = e.target.getAttribute("data-title");
+              console.log(attribute);
+
+              var sheet = document.styleSheets[0];
+              if(e.target.checked == true) {
+                sheet.addRule("." + attribute,"display: inline;");
+              }
+              else {
+                sheet.addRule("." + attribute, "display: none;");
+              }
+
+          } );
+      }
     }
   </script>
   <link rel="stylesheet" type="text/css" href="style.css"></link>
