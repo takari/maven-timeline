@@ -9,7 +9,7 @@ function TimeLineDb(timelineData) {
   };
 
   db.transaction(function (tx) {
-    tx.executeSql('DROP TABLE events');
+    tx.executeSql('DROP TABLE IF EXISTS events');
     tx.executeSql('CREATE TABLE events (start LONG, end LONG, duration INTEGER, trackNum INTEGER, groupId TEXT, artifactId TEXT, phase TEXT, goal TEXT, phaseId TEXT)');
   });
 
