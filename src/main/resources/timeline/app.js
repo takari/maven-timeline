@@ -100,8 +100,12 @@ function TimeLineApp() {
     controlsContainer.appendChild(legendElement);
 
     timeLineDb.getPhases(function(tx, rs) {
-      for(var i = 0; i < rs.rows.length; i++) {
-        appendHighlightToggle(controlsContainer, "phase-", rs.rows[i]["phase"], i);
+      var themeIndex = 0;
+      for(var i = 0; i < rs.rows.length; i++, themeIndex++) {
+        if(themeIndex >= (window.highlightColorTheme.length)) {
+          themeIndex = 0;
+        }
+        appendHighlightToggle(controlsContainer, "phase-", rs.rows[i]["phase"], themeIndex);
       }
 
       legendElement = document.createElement("legend");
@@ -109,8 +113,12 @@ function TimeLineApp() {
       controlsContainer.appendChild(legendElement);
 
       timeLineDb.getGoals(function(tx, rs) {
-        for(var i = 0; i < rs.rows.length; i++) {
-          appendHighlightToggle(controlsContainer, "goal-", rs.rows[i]["goal"], i);
+        var themeIndex = 0;
+        for(var i = 0; i < rs.rows.length; i++, themeIndex++) {
+          if(themeIndex >= (window.highlightColorTheme.length)) {
+             themeIndex = 0;
+          }
+          appendHighlightToggle(controlsContainer, "goal-", rs.rows[i]["goal"], themeIndex);
         }
       });
     });
