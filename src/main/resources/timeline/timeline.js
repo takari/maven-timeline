@@ -72,7 +72,14 @@ function TimeLine(timelineData) {
       var width = normalize(endTime, startTime, zoomFactor);
       var style = "width: " + width + "px; left: " + left + "px;";
       div.setAttribute("style", style);
-      div.setAttribute("class", "event " + event.color);
+      div.setAttribute("class",
+        "event " +
+        event.color + " " +
+        "phase-" + event.phase + " " +
+        "goal-" + event.goal + " " +
+        "artifactId-" + event.artifactId + " " +
+        "id-" + event.id)
+      ;
       div.setAttribute("title", description(event));
     }
 

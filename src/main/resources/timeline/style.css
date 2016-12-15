@@ -90,6 +90,7 @@ header > .groupId:after,
   box-shadow: 0 4px 5px 0 rgba(0,0,0,0.14),0 1px 10px 0 rgba(0,0,0,0.12),0 2px 4px -1px rgba(0,0,0,0.3);
 }
 
+.controls,
 .summary {
   box-shadow: 0 4px 5px 0 rgba(0,0,0,0.14),0 1px 10px 0 rgba(0,0,0,0.12),0 2px 4px -1px rgba(0,0,0,0.3);
   display: inline-block;
@@ -97,7 +98,12 @@ header > .groupId:after,
   padding: 20px;
   margin: 20px;
   min-width: 300px;
+  max-width: 600px;
   /* display: flex; */
+}
+
+.controls legend {
+  margin-top: 10px;
 }
 
 .summary div:not(:last-child) {
@@ -122,10 +128,14 @@ header > .groupId:after,
   color: rgba(0,0,0,0.4);
 }
 
-#zoomSlider span:after {
-  content: "";
-}
-
 .ui-checkboxradio-label {
   margin-top: 10px;
+}
+
+.highlightingBox {
+  opacity: .33;
+}
+
+.highlightingBox.ui-state-active {
+  opacity: 1;
 }
