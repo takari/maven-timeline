@@ -61,7 +61,7 @@ function TimeLineApp() {
     });
   }
 
-  function addControls(zoomMin, zoomMax, zoomDefault, timeLineDb) {
+  function addControls(zoomMin, zoomMax, zoomDefault, timeLineDb, timeLine) {
     var controlsContainer = document.createElement("div");
     controlsContainer.setAttribute("class", "controls");
     var h2 = document.createElement("h2");
@@ -83,7 +83,7 @@ function TimeLineApp() {
       $("#zoomSlider").slider({
         min: zoomMin, max: zoomMax, step: 1, value: zoomDefault,
         change: function (ev, ui) {
-          this.timeLine.render(ui.value);
+          timeLine.render(ui.value);
         }
       });
     });
@@ -205,7 +205,7 @@ function TimeLineApp() {
 
     this.timeLine.render(zoomDefault);
 
-    addControls(zoomMin, zoomMax, zoomDefault, this.timeLineDb);
+    addControls(zoomMin, zoomMax, zoomDefault, this.timeLineDb, this.timeLine);
     addStatsCards(this.timeLineDb);
   }
 }
