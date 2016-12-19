@@ -5,20 +5,11 @@
  */
 package io.takari.maven.timeline.buildevents;
 
+import com.google.common.collect.Lists;
 import io.takari.maven.timeline.Event;
 import io.takari.maven.timeline.Timeline;
 import io.takari.maven.timeline.TimelineSerializer;
 import io.takari.maven.timeline.WebUtils;
-
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 import org.apache.maven.execution.AbstractExecutionListener;
 import org.apache.maven.execution.ExecutionEvent;
 import org.apache.maven.plugin.MojoExecution;
@@ -26,7 +17,11 @@ import org.apache.maven.project.MavenProject;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
-import com.google.common.collect.Lists;
+import java.io.*;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
 
 // adjacent bars should be a different color
 // highlight the critical path
@@ -40,12 +35,11 @@ public class BuildEventListener extends AbstractExecutionListener {
   private final long start;
   private final Map<Execution, Metric> executionMetrics = new ConcurrentHashMap<Execution, Metric>();
   private final Map<Execution, Event> timelineMetrics = new ConcurrentHashMap<Execution, Event>();
-  private final Map<Long, Long> threadToTrackNum = new ConcurrentHashMap<Long, Long>();
+  private final Map<Long, AtomicLong> threadToTrackNum = new ConcurrentHashMap<Long, AtomicLong>();
   private final Map<Long, Integer> threadNumToColour = new ConcurrentHashMap<Long, Integer>();
-  private long trackNum = 1;
+  private AtomicLong trackNum = new AtomicLong(0);
 
-  long startTime;
-  long endTime;
+  private long startTime;
 
   private static String[] colours = new String[] {
       "blue", "green"
@@ -60,7 +54,7 @@ public class BuildEventListener extends AbstractExecutionListener {
     this.startTime = nowInUtc();
   }
 
-  long millis() {
+  private long millis() {
     return System.currentTimeMillis() - start;
   }
 
@@ -68,11 +62,10 @@ public class BuildEventListener extends AbstractExecutionListener {
   public void mojoStarted(ExecutionEvent event) {
     Execution key = key(event);
     Long threadId = Thread.currentThread().getId();
-    Long threadTrackNum = threadToTrackNum.get(threadId);
+    AtomicLong threadTrackNum = threadToTrackNum.get(threadId);
     if (threadTrackNum == null) {
-      threadTrackNum = trackNum;
+      threadTrackNum = new AtomicLong(trackNum.getAndIncrement());
       threadToTrackNum.put(threadId, threadTrackNum);
-      trackNum++;
     }
     Integer colour = threadNumToColour.get(threadId);
     if (colour == null) {
@@ -86,7 +79,7 @@ public class BuildEventListener extends AbstractExecutionListener {
     timelineMetrics.put(
       key,
       new Event(
-        threadTrackNum,
+        threadTrackNum.get(),
         colours[colour],
         nowInUtc(),
         key.groupId,
@@ -98,7 +91,7 @@ public class BuildEventListener extends AbstractExecutionListener {
     );
   }
 
-  long nowInUtc() {
+  private long nowInUtc() {
     return new DateTime(DateTimeZone.UTC).getMillis();
   }
 
@@ -149,18 +142,15 @@ public class BuildEventListener extends AbstractExecutionListener {
       throw new IOException("Unable to create " + path);
     }
 
-    Writer writer = new BufferedWriter(new FileWriter(output));
-    try {
+    try (Writer writer = new BufferedWriter(new FileWriter(output))) {
       Metric.array(writer, executionMetrics.values());
-    } finally {
-      writer.close();
     }
 
     exportTimeline();
   }
 
   private void exportTimeline() throws IOException {
-    endTime = nowInUtc();
+    long endTime = nowInUtc();
     WebUtils.copyResourcesToDirectory(getClass(), "timeline", mavenTimeline.getParentFile());
     try(Writer mavenTimelineWriter = new BufferedWriter(new FileWriter(mavenTimeline))) {
       Timeline timeline = new Timeline(startTime, endTime, groupId, artifactId, Lists.newArrayList(timelineMetrics.values()));
@@ -181,7 +171,7 @@ public class BuildEventListener extends AbstractExecutionListener {
     final String goal;
     final String id;
 
-    public Execution(String groupId, String artifactId, String phase, String goal, String id) {
+    Execution(String groupId, String artifactId, String phase, String goal, String id) {
       this.groupId = groupId;
       this.artifactId = artifactId;
       this.phase = phase;
