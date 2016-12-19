@@ -114,10 +114,6 @@ header > .groupId:after,
   float: right;
 }
 
-.summary span:last-child:after {
-  content: " ms"
-}
-
 .timeLabel {
   position: absolute;
   top: 0;
@@ -133,7 +129,7 @@ header > .groupId:after,
 }
 
 .highlightingBox {
-  opacity: .33;
+  opacity: .66;
 }
 
 .highlightingBox.ui-state-active {

@@ -1,3 +1,5 @@
+var SIZE_LIMIT = 20;
+
 function TimeLine(timelineData) {
 
   addProperty(document.getElementsByTagName("header")[0], timelineData, "groupId");
@@ -12,6 +14,17 @@ function TimeLine(timelineData) {
     var timeLabel = document.createElement("div");
     timeLabel.setAttribute("class", "timeLabel");
     var date = new Date(currentTime);
+
+    if(zoomFactor > 2000) {
+      if(date.getUTCMinutes() % 5 != 0) return;
+    }
+    else if(zoomFactor > 1250) {
+      if(date.getUTCMinutes() % 4 != 0) return;
+    }
+    else if(zoomFactor > 750) {
+      if(date.getUTCMinutes() % 2 != 0) return;
+    }
+
     timeLabel.innerText = date.getUTCHours() + ":" + twoDigits(date.getUTCMinutes());
     if(zoomFactor < 10) {
       timeLabel.innerText = timeLabel.innerText + ":" + twoDigits(date.getUTCSeconds());
@@ -29,11 +42,11 @@ function TimeLine(timelineData) {
       event.phase + ":" +
       event.goal + ":" +
       event.id + "(" +
-      event.duration + "ms)";
+      formatTime(event.duration) + ")";
   }
 
   this.render = function(zoomFactor) {
-    // console.log(zoomFactor);
+    console.log(zoomFactor);
     var sessionStartTime = timelineData.start;
     var sessionEndTime = timelineData.end;
 
@@ -45,7 +58,9 @@ function TimeLine(timelineData) {
       var startTime = event.start;
       var endTime = event.end;
 
-      if (event.duration < 50) {
+      var width = normalize(endTime, startTime, zoomFactor);
+
+      if (event.duration < 50 || width < SIZE_LIMIT) {
         continue;
       }
 
@@ -69,7 +84,7 @@ function TimeLine(timelineData) {
       }
       addProperty(div, event, "duration");
       var left = normalize(sessionStartTime, startTime, zoomFactor);
-      var width = normalize(endTime, startTime, zoomFactor);
+
       var style = "width: " + width + "px; left: " + left + "px;";
       div.setAttribute("style", style);
       div.setAttribute("class",
@@ -99,7 +114,12 @@ function TimeLine(timelineData) {
   function addProperty(container, event, propertyName) {
     var span = document.createElement("span");
     span.setAttribute("class", propertyName);
-    span.innerText = event[propertyName];
+    if(propertyName == "duration") {
+      span.innerText = formatTime(event[propertyName]);
+    }
+    else {
+      span.innerText = event[propertyName];
+    }
     container.appendChild(span);
   }
 

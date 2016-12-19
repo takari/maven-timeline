@@ -38,25 +38,25 @@ function TimeLineApp() {
     timeLineDb.getTotalPhaseDuration(function (phase, duration) {
       var container = document.createElement("div");
       container.appendChild(elem("span", phase));
-      container.appendChild(elem("span", duration));
+      container.appendChild(elem("span", formatTime(duration)));
       document.getElementsByClassName("summary")[0].appendChild(container);
     });
     timeLineDb.getTotalGoalDuration(function (goal, duration) {
       var container = document.createElement("div");
       container.appendChild(elem("span", goal));
-      container.appendChild(elem("span", duration));
+      container.appendChild(elem("span", formatTime(duration)));
       document.getElementsByClassName("summary")[1].appendChild(container);
     });
     timeLineDb.getTotalArtifactDuration(function (artId, duration) {
       var container = document.createElement("div");
       container.appendChild(elem("span", artId));
-      container.appendChild(elem("span", duration));
+      container.appendChild(elem("span", formatTime(duration)));
       document.getElementsByClassName("summary")[2].appendChild(container);
     });
     timeLineDb.getTotalTrackDuration(function (track, duration) {
       var container = document.createElement("div");
       container.appendChild(elem("span", track));
-      container.appendChild(elem("span", duration));
+      container.appendChild(elem("span", formatTime(duration)));
       document.getElementsByClassName("summary")[3].appendChild(container);
     });
   }
@@ -208,7 +208,7 @@ function TimeLineApp() {
 
   this.run = function() {
     var zoomMin = 1;
-    var zoomMax = Math.max(zoomMin, (timelineData.end - timelineData.start) / 500);
+    var zoomMax = Math.max(zoomMin, (timelineData.end - timelineData.start) / 1000);
     var zoomDefault = Math.max(zoomMin, zoomMax / 3);
 
     this.timeLine.render(zoomDefault);
@@ -217,6 +217,18 @@ function TimeLineApp() {
     addStatsCards(this.timeLineDb);
   }
 }
+
+function formatTime(duration) {
+  if(duration < 100) {
+    return duration + " ms";
+  }
+  if(duration < 1000 * 60) {
+    return Number((duration/1000).toFixed(1)) + " s";
+  }
+  // if(duration < 1000 * 60 * 60) {
+    return Math.floor(duration / (1000 * 60)) + " min " + Math.floor(((duration % (60 * 1000)) / 1000)) + " s";
+  // }
+  }
 
 window.highlightColorTheme = [
   "#ef5350",
