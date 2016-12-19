@@ -27,16 +27,16 @@ import java.util.concurrent.atomic.AtomicLong;
 // highlight the critical path
 // table with build values that are sortable
 
-public class BuildEventListener extends AbstractExecutionListener {
+public final class BuildEventListener extends AbstractExecutionListener {
   private final File mavenTimeline;
   private final String artifactId;
   private final String groupId;
   private final File output;
   private final long start;
-  private final Map<Execution, Metric> executionMetrics = new ConcurrentHashMap<Execution, Metric>();
-  private final Map<Execution, Event> timelineMetrics = new ConcurrentHashMap<Execution, Event>();
-  private final Map<Long, AtomicLong> threadToTrackNum = new ConcurrentHashMap<Long, AtomicLong>();
-  private final Map<Long, Integer> threadNumToColour = new ConcurrentHashMap<Long, Integer>();
+  private final Map<Execution, Metric> executionMetrics = new ConcurrentHashMap<>();
+  private final Map<Execution, Event> timelineMetrics = new ConcurrentHashMap<>();
+  private final Map<Long, AtomicLong> threadToTrackNum = new ConcurrentHashMap<>();
+  private final Map<Long, Integer> threadNumToColour = new ConcurrentHashMap<>();
   private AtomicLong trackNum = new AtomicLong(0);
 
   private long startTime;
@@ -64,8 +64,14 @@ public class BuildEventListener extends AbstractExecutionListener {
     Long threadId = Thread.currentThread().getId();
     AtomicLong threadTrackNum = threadToTrackNum.get(threadId);
     if (threadTrackNum == null) {
-      threadTrackNum = new AtomicLong(trackNum.getAndIncrement());
-      threadToTrackNum.put(threadId, threadTrackNum);
+      // use this since we can not computeIfAbsent() yet
+      synchronized (this) {
+        //noinspection ConstantConditions
+        if (threadTrackNum == null) {
+          threadTrackNum = new AtomicLong(trackNum.getAndIncrement());
+          threadToTrackNum.put(threadId, threadTrackNum);
+        }
+      }
     }
     Integer colour = threadNumToColour.get(threadId);
     if (colour == null) {
@@ -180,65 +186,28 @@ public class BuildEventListener extends AbstractExecutionListener {
     }
 
     @Override
-    public int hashCode() {
-      final int prime = 31;
-      int result = 1;
-      result = prime * result + ((artifactId == null) ? 0 : artifactId.hashCode());
-      result = prime * result + ((goal == null) ? 0 : goal.hashCode());
-      result = prime * result + ((groupId == null) ? 0 : groupId.hashCode());
-      result = prime * result + ((id == null) ? 0 : id.hashCode());
-      result = prime * result + ((phase == null) ? 0 : phase.hashCode());
-      return result;
+    public boolean equals(Object o) {
+      if (this == o) return true;
+      if (o == null || getClass() != o.getClass()) return false;
+
+      Execution execution = (Execution) o;
+
+      if (groupId != null ? !groupId.equals(execution.groupId) : execution.groupId != null) return false;
+      if (artifactId != null ? !artifactId.equals(execution.artifactId) : execution.artifactId != null) return false;
+      if (phase != null ? !phase.equals(execution.phase) : execution.phase != null) return false;
+      //noinspection SimplifiableIfStatement
+      if (goal != null ? !goal.equals(execution.goal) : execution.goal != null) return false;
+      return id != null ? id.equals(execution.id) : execution.id == null;
     }
 
     @Override
-    public boolean equals(Object obj) {
-      if (this == obj) {
-        return true;
-      }
-      if (obj == null) {
-        return false;
-      }
-      if (getClass() != obj.getClass()) {
-        return false;
-      }
-      Execution other = (Execution) obj;
-      if (artifactId == null) {
-        if (other.artifactId != null) {
-          return false;
-        }
-      } else if (!artifactId.equals(other.artifactId)) {
-        return false;
-      }
-      if (goal == null) {
-        if (other.goal != null) {
-          return false;
-        }
-      } else if (!goal.equals(other.goal)) {
-        return false;
-      }
-      if (groupId == null) {
-        if (other.groupId != null) {
-          return false;
-        }
-      } else if (!groupId.equals(other.groupId)) {
-        return false;
-      }
-      if (id == null) {
-        if (other.id != null) {
-          return false;
-        }
-      } else if (!id.equals(other.id)) {
-        return false;
-      }
-      if (phase == null) {
-        if (other.phase != null) {
-          return false;
-        }
-      } else if (!phase.equals(other.phase)) {
-        return false;
-      }
-      return true;
+    public int hashCode() {
+      int result = groupId != null ? groupId.hashCode() : 0;
+      result = 31 * result + (artifactId != null ? artifactId.hashCode() : 0);
+      result = 31 * result + (phase != null ? phase.hashCode() : 0);
+      result = 31 * result + (goal != null ? goal.hashCode() : 0);
+      result = 31 * result + (id != null ? id.hashCode() : 0);
+      return result;
     }
 
     @Override
