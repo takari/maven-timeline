@@ -32,14 +32,33 @@ function TimeLineDb(timelineData) {
       tx.executeSql("select phase from events group by phase", [], renderFunc, errorHandler);
     });
   };
+  this.getTopPhases = function(limit, renderFunc) {
+    db.transaction(function(tx) {
+      tx.executeSql("select phase from events group by phase order by sum(duration) desc LIMIT ?", [limit], renderFunc, errorHandler);
+    });
+  };
   this.getGoals = function(renderFunc) {
     db.transaction(function(tx) {
       tx.executeSql("select goal from events group by goal", [], renderFunc, errorHandler);
     });
   };
+  this.getTopGoals = function(limit, renderFunc) {
+    db.transaction(function(tx) {
+      tx.executeSql("select goal from events group by goal order by sum(duration) desc LIMIT ?", [limit], renderFunc, errorHandler);
+    });
+  };
   this.getArtifactIds = function(renderFunc) {
     db.transaction(function(tx) {
       tx.executeSql("select artifactId from events group by artifactId", [], renderFunc, errorHandler);
+    });
+  };
+  this.getTopArtifacts = function(limit, renderFunc) {
+    db.transaction(function(tx) {
+      tx.executeSql("select groupId, artifactId, phase, goal, duration from events order by duration desc limit ?", [limit], function(tx, rs) {
+        for(var i = 0; i < rs.rows.length; i++) {
+          renderFunc(rs.rows[i]["groupId"], rs.rows[i]["artifactId"], rs.rows[i]["phase"], rs.rows[i]["goal"], rs.rows[i]["duration"]);
+        }
+      }, errorHandler);
     });
   };
   this.getTracks = function(renderFunc) {

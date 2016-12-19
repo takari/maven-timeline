@@ -56,15 +56,12 @@ header > h1 {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  transition: background-color .5s;
 }
 
 header > .groupId:after,
 .event > span:not(:last-child):after {
   content: ":";
-}
-
-.event > span:last-child:after {
-  content: "ms";
 }
 
 .event.green {
@@ -90,28 +87,35 @@ header > .groupId:after,
   box-shadow: 0 4px 5px 0 rgba(0,0,0,0.14),0 1px 10px 0 rgba(0,0,0,0.12),0 2px 4px -1px rgba(0,0,0,0.3);
 }
 
-.controls,
-.summary {
+.card {
   box-shadow: 0 4px 5px 0 rgba(0,0,0,0.14),0 1px 10px 0 rgba(0,0,0,0.12),0 2px 4px -1px rgba(0,0,0,0.3);
   display: inline-block;
   background-color: #fff;
   padding: 20px;
   margin: 20px;
   min-width: 300px;
+}
+
+.card.summary,
+.card.controls {
   max-width: 600px;
-  /* display: flex; */
+}
+
+.card.ranking {
+  max-width: 800px;
 }
 
 .controls legend {
   margin-top: 10px;
 }
 
-.summary div:not(:last-child) {
+.card div:not(:last-child) {
   border-bottom: 1px solid #eee;
 }
 
-.summary span:last-child {
+.card span:last-child {
   float: right;
+  margin-left: 10px;
 }
 
 .timeLabel {

@@ -1,3 +1,21 @@
+var HIGHLIGHTED_ITEMS = 10;
+
+window.highlightColorTheme = [
+  "#ef5350",
+  "#ba68c8",
+  "#7986cb",
+  "#4fc3f7",
+  "#81c784",
+  "#d4e157",
+  "#fff176",
+  "#f48fb1",
+  "#827717",
+  "#a1887f",
+  "#90a4ae",
+  "#ff5722",
+  "#ffc107"
+];
+
 function TimeLineApp() {
   var timelineData = window.timelineData;
   if (timelineData == undefined) {
@@ -28,7 +46,7 @@ function TimeLineApp() {
 
     for (var i = 0; i < cardTitles.length; i++) {
       var summary = document.createElement("div");
-      summary.setAttribute("class", "summary");
+      summary.setAttribute("class", "summary card");
       var h2 = document.createElement("h2");
       h2.innerText = cardTitles[i];
       summary.appendChild(h2);
@@ -63,7 +81,7 @@ function TimeLineApp() {
 
   function addControls(zoomMin, zoomMax, zoomDefault, timeLineDb, timeLine) {
     var controlsContainer = document.createElement("div");
-    controlsContainer.setAttribute("class", "controls");
+    controlsContainer.setAttribute("class", "controls card");
     var h2 = document.createElement("h2");
     h2.innerText = "Controls";
     controlsContainer.appendChild(h2);
@@ -88,18 +106,18 @@ function TimeLineApp() {
       });
     });
 
-    appendCssClassToggle(controlsContainer, "groupId");
-    appendCssClassToggle(controlsContainer, "artifactId");
-    appendCssClassToggle(controlsContainer, "goal");
-    appendCssClassToggle(controlsContainer, "phase");
-    appendCssClassToggle(controlsContainer, "id");
-    appendCssClassToggle(controlsContainer, "duration");
+    appendCssClassToggle(controlsContainer, "groupId", false);
+    appendCssClassToggle(controlsContainer, "artifactId", true);
+    appendCssClassToggle(controlsContainer, "goal", false);
+    appendCssClassToggle(controlsContainer, "phase", true);
+    appendCssClassToggle(controlsContainer, "id", false);
+    appendCssClassToggle(controlsContainer, "duration", true);
 
     legendElement = document.createElement("legend");
     legendElement.innerText = "Highlight by phase";
     controlsContainer.appendChild(legendElement);
 
-    timeLineDb.getPhases(function(tx, rs) {
+    timeLineDb.getTopPhases(HIGHLIGHTED_ITEMS, function(tx, rs) {
       var themeIndex = 0;
       for(var i = 0; i < rs.rows.length; i++, themeIndex++) {
         if(themeIndex >= (window.highlightColorTheme.length)) {
@@ -112,19 +130,19 @@ function TimeLineApp() {
       legendElement.innerText = "Highlight by goal";
       controlsContainer.appendChild(legendElement);
 
-      timeLineDb.getGoals(function(tx, rs) {
+      timeLineDb.getTopGoals(HIGHLIGHTED_ITEMS, function(tx, rs) {
         var themeIndex = 0;
         for(var i = 0; i < rs.rows.length; i++, themeIndex++) {
           if(themeIndex >= (window.highlightColorTheme.length)) {
              themeIndex = 0;
           }
-          appendHighlightToggle(controlsContainer, "goal-", rs.rows[i]["goal"], themeIndex);
+          appendHighlightToggle(controlsContainer, "goal-", rs.rows[i]["goal"], window.highlightColorTheme.length - 1 - themeIndex);
         }
       });
     });
   }
 
-  function appendCssClassToggle(controlsContainer, className) {
+  function appendCssClassToggle(controlsContainer, className, enabled) {
     var label = document.createElement("label");
     var input = document.createElement("input");
     var name = "checkbox-nested-" + className;
@@ -132,9 +150,15 @@ function TimeLineApp() {
     input.setAttribute("type", "checkbox");
     input.setAttribute("name", name);
     input.setAttribute("id", name);
-    input.setAttribute("checked", true);
     input.setAttribute("data-title", className);
     label.setAttribute("for", name);
+
+    if(enabled != undefined && enabled != false) {
+      input.setAttribute("checked", true);
+    }
+    else {
+      document.styleSheets[0].addRule("." + className, "display: none;");
+    }
 
     label.innerText = className;
     label.appendChild(input);
@@ -143,7 +167,7 @@ function TimeLineApp() {
     $(function () {
       $("#" + name).checkboxradio({
         icon: false,
-        value: true
+        value: enabled
       });
     });
     $("#" + name).on("change", function (e) {
@@ -177,6 +201,10 @@ function TimeLineApp() {
     label.appendChild(input);
     controlsContainer.appendChild(label);
 
+    document.styleSheets[0].addRule(".event" + "." + classPrefix+className + ":hover",
+      "background-color: " + window.highlightColorTheme[index] + "; transition: background-color .5s;"
+    );
+
     $(function () {
       $("#" + name).checkboxradio({
         icon: false,
@@ -206,6 +234,22 @@ function TimeLineApp() {
     });
   }
 
+  function addRankings(timeLineDb) {
+    var controlsContainer = document.createElement("div");
+    controlsContainer.setAttribute("class", "ranking card");
+    var h2 = document.createElement("h2");
+    h2.innerText = "Top 10 artifacts";
+    controlsContainer.appendChild(h2);
+    document.getElementsByTagName("aside")[0].appendChild(controlsContainer);
+
+    timeLineDb.getTopArtifacts(10, function (groupId, artId, phase, goal, duration) {
+      var container = document.createElement("div");
+      container.appendChild(elem("span", artId + ":" + phase + ":" + goal));
+      container.appendChild(elem("span", formatTime(duration)));
+      document.getElementsByClassName("ranking")[0].appendChild(container);
+    });
+  }
+
   this.run = function() {
     var zoomMin = 1;
     var zoomMax = Math.max(zoomMin, (timelineData.end - timelineData.start) / 1000);
@@ -215,6 +259,7 @@ function TimeLineApp() {
 
     addControls(zoomMin, zoomMax, zoomDefault, this.timeLineDb, this.timeLine);
     addStatsCards(this.timeLineDb);
+    addRankings(this.timeLineDb)
   }
 }
 
@@ -228,20 +273,4 @@ function formatTime(duration) {
   // if(duration < 1000 * 60 * 60) {
     return Math.floor(duration / (1000 * 60)) + " min " + Math.floor(((duration % (60 * 1000)) / 1000)) + " s";
   // }
-  }
-
-window.highlightColorTheme = [
-  "#ef5350",
-  "#ba68c8",
-  "#7986cb",
-  "#4fc3f7",
-  "#81c784",
-  "#d4e157",
-  "#fff176",
-  "#ffc107",
-  "#a1887f",
-  "#90a4ae",
-  "#ff5722",
-  "#827717",
-  "#f48fb1"
-];
+}
