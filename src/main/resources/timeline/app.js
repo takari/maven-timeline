@@ -31,7 +31,7 @@ function TimeLineApp() {
   this.timeLine = new TimeLine(timelineData);
 
   this.timeLineDb.getTrackCount(function (count) {
-    document.getElementById("timeLineContainer").setAttribute("style", "height:" + (40 + ((count + 1) * 80)) + "px");
+    document.getElementById("timeLineContainer").setAttribute("style", "height:" + (20 + ((count + 1) * 60)) + "px");
   });
 
 

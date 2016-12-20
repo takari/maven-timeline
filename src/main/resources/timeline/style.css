@@ -48,11 +48,11 @@ header > h1 {
 
 .track {
   position: relative;
-  height: 80px;
+  height: 60px;
 }
 .event {
   position: absolute;
-  padding: 20px;
+  padding: 10px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

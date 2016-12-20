@@ -1,4 +1,12 @@
+/**
+ * Minimum size of the cards in the UI
+ */
 var SIZE_LIMIT = 20;
+
+/**
+ * Minimum event duration to be displayed
+ */
+var MIN_DURATION_MS = 50;
 
 function TimeLine(timelineData) {
 
@@ -60,7 +68,7 @@ function TimeLine(timelineData) {
 
       var width = normalize(endTime, startTime, zoomFactor);
 
-      if (event.duration < 50 || width < SIZE_LIMIT) {
+      if (event.duration < MIN_DURATION_MS || width < SIZE_LIMIT) {
         continue;
       }
 
