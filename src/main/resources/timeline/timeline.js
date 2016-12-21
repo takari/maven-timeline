@@ -8,6 +8,8 @@ var SIZE_LIMIT = 20;
  */
 var MIN_DURATION_MS = 50;
 
+var EVENT_STYLES = ["odd", "even"];
+
 function TimeLine(timelineData) {
 
   addProperty(document.getElementsByTagName("header")[0], timelineData, "groupId");
@@ -73,6 +75,8 @@ function TimeLine(timelineData) {
     var rootContainer = document.getElementById("timeLineContainer");
     rootContainer.innerHTML = "";
 
+    var styleIndexPerTrack = [];
+
     for(var index = 0; index < timelineData.events.length; index++) {
       var event = timelineData.events[index];
       var startTime = event.start;
@@ -105,11 +109,19 @@ function TimeLine(timelineData) {
       addProperty(div, event, "duration");
       var left = normalize(sessionStartTime, startTime, zoomFactor);
 
+      var styleIndex = styleIndexPerTrack[event.track];
+      if(styleIndex == undefined) {
+        styleIndex = 0;
+      }
+      var eventColor = EVENT_STYLES[styleIndex];
+      styleIndex = (styleIndex + 1) % EVENT_STYLES.length;
+      styleIndexPerTrack[event.track] = styleIndex;
+
       var style = "width: " + width + "px; left: " + left + "px;";
       div.setAttribute("style", style);
       div.setAttribute("class",
         "event " +
-        event.color + " " +
+        eventColor + " " +
         "phase-" + event.phase + " " +
         "goal-" + event.goal + " " +
         "artifactId-" + event.artifactId + " " +

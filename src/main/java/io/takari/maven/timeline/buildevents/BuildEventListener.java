@@ -41,10 +41,6 @@ public final class BuildEventListener extends AbstractExecutionListener {
 
   private long startTime;
 
-  private static String[] colours = new String[] {
-      "blue", "green"
-  };
-
   public BuildEventListener(File output, File mavenTimeline, String artifactId, String groupId) {
     this.output = output;
     this.mavenTimeline = mavenTimeline;
@@ -86,7 +82,6 @@ public final class BuildEventListener extends AbstractExecutionListener {
       key,
       new Event(
         threadTrackNum.get(),
-        colours[colour],
         nowInUtc(),
         key.groupId,
         key.artifactId,

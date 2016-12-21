@@ -7,7 +7,6 @@ public class Event {
   private long end;
   private long duration;
   private final long trackNum;
-  private final String color;
   private final String groupId;
   private final String artifactId;
   private final String phase;
@@ -15,7 +14,6 @@ public class Event {
   private final String id;
 
   public Event(long trackNum,
-               String color,
                long start,
                String groupId,
                String artifactId,
@@ -24,7 +22,6 @@ public class Event {
                String id) {
     this.start = start;
     this.trackNum = trackNum;
-    this.color = color;
     this.groupId = groupId;
     this.artifactId = artifactId;
     this.phase = phase;
