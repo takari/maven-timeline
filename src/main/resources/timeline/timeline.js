@@ -14,14 +14,20 @@ function TimeLine(timelineData) {
   addProperty(document.getElementsByTagName("header")[0], timelineData, "artifactId");
 
   function twoDigits(num) {
+    if(num == undefined || Number.isNaN(num)) return "00";
     if(num < 10) return "0" + num;
     else return num;
   }
 
   function renderTimeLabel(currentTime, sessionStartTime, zoomFactor, rootContainer) {
     var timeLabel = document.createElement("div");
+    var durationLabel = document.createElement("div");
+
     timeLabel.setAttribute("class", "timeLabel");
+    durationLabel.setAttribute("class", "durationLabel");
+
     var date = new Date(currentTime);
+    var durationTime = new Date(currentTime - sessionStartTime);
 
     if(zoomFactor > 2000) {
       if(date.getUTCMinutes() % 5 != 0) return;
@@ -33,14 +39,20 @@ function TimeLine(timelineData) {
       if(date.getUTCMinutes() % 2 != 0) return;
     }
 
-    timeLabel.innerText = date.getUTCHours() + ":" + twoDigits(date.getUTCMinutes());
+    timeLabel.innerText = twoDigits(date.getUTCHours()) + ":" + twoDigits(date.getUTCMinutes());
+    durationLabel.innerText = twoDigits(durationTime.getUTCHours()) + ":" + twoDigits(durationTime.getUTCMinutes());
     if(zoomFactor < 10) {
       timeLabel.innerText = timeLabel.innerText + ":" + twoDigits(date.getUTCSeconds());
+      durationLabel.innerText = durationTime.innerText + ":" + twoDigits(durationTime.getUTCSeconds());
     }
     var left = normalize(sessionStartTime, currentTime, zoomFactor);
+
     var style = "left: " + left + "px;";
     timeLabel.setAttribute("style", style);
+    durationLabel.setAttribute("style", style);
+
     rootContainer.appendChild(timeLabel);
+    rootContainer.appendChild(durationLabel);
   }
 
   function description(event) {
@@ -114,7 +126,7 @@ function TimeLine(timelineData) {
       stepSeconds = 1;
     }
 
-    for(var currentTime = sessionStartTime - (sessionStartTime % (1000*stepSeconds)); currentTime < sessionEndTime; currentTime += (1000*stepSeconds) ) {
+    for(var currentTime = sessionStartTime - (sessionStartTime % (1000*stepSeconds)) + (1000*stepSeconds); currentTime < sessionEndTime; currentTime += (1000*stepSeconds) ) {
       renderTimeLabel(currentTime, sessionStartTime, zoomFactor, rootContainer);
     }
   };
