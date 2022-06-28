@@ -156,9 +156,9 @@ function TimeLineApp() {
     if(enabled != undefined && enabled != false) {
       input.setAttribute("checked", true);
     }
-    else {
-      document.styleSheets[0].addRule("." + className, "display: none;");
-    }
+    //else {
+    //  document.styleSheets[0].addRule("." + className, "display: none;");
+    //}
 
     label.innerText = className;
     label.appendChild(input);
@@ -201,9 +201,9 @@ function TimeLineApp() {
     label.appendChild(input);
     controlsContainer.appendChild(label);
 
-    document.styleSheets[0].addRule(".event" + "." + classPrefix+className + ":hover",
-      "background-color: " + window.highlightColorTheme[index] + "; transition: background-color .5s;"
-    );
+    //document.styleSheets[0].addRule(".event" + "." + classPrefix+className + ":hover",
+    //  "background-color: " + window.highlightColorTheme[index] + "; transition: background-color .5s;"
+    //);
 
     $(function () {
       $("#" + name).checkboxradio({
