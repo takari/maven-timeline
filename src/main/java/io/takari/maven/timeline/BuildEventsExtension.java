@@ -15,6 +15,9 @@
  */
 package io.takari.maven.timeline;
 
+import javax.inject.Named;
+import javax.inject.Singleton;
+
 import io.takari.maven.timeline.buildevents.BuildEventListener;
 import io.takari.maven.timeline.buildevents.ExecutionListenerChain;
 
@@ -24,11 +27,11 @@ import org.apache.maven.AbstractMavenLifecycleParticipant;
 import org.apache.maven.execution.ExecutionListener;
 import org.apache.maven.execution.MavenExecutionRequest;
 import org.apache.maven.execution.MavenSession;
-import org.codehaus.plexus.component.annotations.Component;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
-@Component(role = AbstractMavenLifecycleParticipant.class, hint = "buildevents")
+@Singleton
+@Named("buildevents")
 public class BuildEventsExtension extends AbstractMavenLifecycleParticipant {
   private static final String OUTPUT_FILE = "execution.metrics.output.file";
   private static final String DEFAULT_FILE_DESTINATION = "target/execution-metrics.json";
