@@ -7,8 +7,8 @@
   </parent>
   <groupId>io.takari.maven</groupId>
   <artifactId>maven-timeline</artifactId>
-  <version>1.7-SNAPSHOT</version>
-  
+  <version>1.8-SNAPSHOT</version>
+
   <name>Maven Timeline plugin</name>
   <description>Output the timeline of a build to am html file</description>
   <url>https://github.com/dgageot/maven-timeline</url>
@@ -52,13 +52,13 @@
       <version>2.3</version>
     </dependency>
   </dependencies>
-  
+
   <build>
     <plugins>
       <plugin>
         <groupId>org.codehaus.plexus</groupId>
         <artifactId>plexus-component-metadata</artifactId>
       </plugin>
-    </plugins>  
+    </plugins>
   </build>
 </project>

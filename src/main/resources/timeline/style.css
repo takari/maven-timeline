@@ -1,0 +1,146 @@
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  line-height: 1.5;
+  font-family: "Roboto", sans-serif;
+  font-weight: normal;
+  color: rgba(0,0,0,0.85);
+}
+
+body {
+  margin: 0;
+  font-family: "Roboto", sans-serif;
+  font-size: 15px;
+  background-color: #fafafa;
+}
+
+main,
+aside {
+  padding: 20px;
+}
+
+h1, h2 {
+  font-weight:normal;
+}
+
+aside {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+header {
+  padding: 10px 20px;
+  background-color: #fff;
+  box-shadow: 0 8px 10px 1px rgba(0,0,0,0.14),0 3px 14px 2px rgba(0,0,0,0.12),0 5px 5px -3px rgba(0,0,0,0.3);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 999;
+}
+
+header > h1 {
+  margin: 0;
+}
+
+.track {
+  position: relative;
+  height: 60px;
+}
+.event {
+  position: absolute;
+  padding: 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: background-color .5s;
+}
+
+header > .groupId:after,
+.event > span:not(:last-child):after {
+  content: ":";
+}
+
+.event.odd {
+  color: #757575;
+  background-color: #fff;
+  z-index: 2;
+  box-shadow: 0 8px 10px 1px rgba(0,0,0,0.14),0 3px 14px 2px rgba(0,0,0,0.12),0 5px 5px -3px rgba(0,0,0,0.3);
+}
+.event.even {
+  color: #757575;
+  background-color: #f4f4f4;
+  z-index: 1;
+  box-shadow: 0 4px 5px 0 rgba(0,0,0,0.14),0 1px 10px 0 rgba(0,0,0,0.12),0 2px 4px -1px rgba(0,0,0,0.3);
+}
+
+#timeLineContainer {
+  margin-top: 100px;
+  height: 250px;
+  padding: 30px 0;
+  position: relative;
+  display: block;
+  overflow: auto;
+  box-shadow: 0 4px 5px 0 rgba(0,0,0,0.14),0 1px 10px 0 rgba(0,0,0,0.12),0 2px 4px -1px rgba(0,0,0,0.3);
+}
+
+.card {
+  box-shadow: 0 4px 5px 0 rgba(0,0,0,0.14),0 1px 10px 0 rgba(0,0,0,0.12),0 2px 4px -1px rgba(0,0,0,0.3);
+  display: inline-block;
+  background-color: #fff;
+  padding: 20px;
+  margin: 20px;
+  min-width: 300px;
+}
+
+.card.summary,
+.card.controls {
+  max-width: 600px;
+}
+
+.card.ranking {
+  max-width: 800px;
+}
+
+.controls legend {
+  margin-top: 10px;
+}
+
+.card div:not(:last-child) {
+  border-bottom: 1px solid #eee;
+}
+
+.card span:last-child {
+  float: right;
+  margin-left: 10px;
+}
+
+.timeLabel,
+.durationLabel {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border-left: 1px solid #efefef;
+  z-index: 0;
+  padding: 5px;
+  color: rgba(0,0,0,0.4);
+}
+
+.durationLabel {
+  top: auto;
+}
+
+.ui-checkboxradio-label {
+  margin-top: 10px;
+}
+
+.highlightingBox {
+  opacity: .66;
+}
+
+.highlightingBox.ui-state-active {
+  opacity: 1;
+}

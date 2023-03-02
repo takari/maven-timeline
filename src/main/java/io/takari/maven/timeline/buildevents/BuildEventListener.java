@@ -5,20 +5,11 @@
  */
 package io.takari.maven.timeline.buildevents;
 
+import com.google.common.collect.Lists;
 import io.takari.maven.timeline.Event;
 import io.takari.maven.timeline.Timeline;
 import io.takari.maven.timeline.TimelineSerializer;
 import io.takari.maven.timeline.WebUtils;
-
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 import org.apache.maven.execution.AbstractExecutionListener;
 import org.apache.maven.execution.ExecutionEvent;
 import org.apache.maven.plugin.MojoExecution;
@@ -26,37 +17,40 @@ import org.apache.maven.project.MavenProject;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
-import com.google.common.collect.Lists;
+import java.io.*;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
 
 // adjacent bars should be a different color
 // highlight the critical path
 // table with build values that are sortable
 
-public class BuildEventListener extends AbstractExecutionListener {
+public final class BuildEventListener extends AbstractExecutionListener {
   private final File mavenTimeline;
+  private final String artifactId;
+  private final String groupId;
   private final File output;
   private final long start;
-  private final Map<Execution, Metric> executionMetrics = new ConcurrentHashMap<Execution, Metric>();
-  private final Map<Execution, Event> timelineMetrics = new ConcurrentHashMap<Execution, Event>();
-  private final Map<Long, Long> threadToTrackNum = new ConcurrentHashMap<Long, Long>();
-  private final Map<Long, Integer> threadNumToColour = new ConcurrentHashMap<Long, Integer>();
-  private long trackNum = 1;
+  private final Map<Execution, Metric> executionMetrics = new ConcurrentHashMap<>();
+  private final Map<Execution, Event> timelineMetrics = new ConcurrentHashMap<>();
+  private final Map<Long, AtomicLong> threadToTrackNum = new ConcurrentHashMap<>();
+  private final Map<Long, Integer> threadNumToColour = new ConcurrentHashMap<>();
+  private AtomicLong trackNum = new AtomicLong(0);
 
-  String startTime;
-  String endTime;
+  private long startTime;
 
-  private static String[] colours = new String[] {
-      "blue", "green"
-  };
-
-  public BuildEventListener(File output, File mavenTimeline) {
+  public BuildEventListener(File output, File mavenTimeline, String artifactId, String groupId) {
     this.output = output;
     this.mavenTimeline = mavenTimeline;
+    this.artifactId = artifactId;
+    this.groupId = groupId;
     this.start = System.currentTimeMillis();
     this.startTime = nowInUtc();
   }
 
-  long millis() {
+  private long millis() {
     return System.currentTimeMillis() - start;
   }
 
@@ -64,11 +58,16 @@ public class BuildEventListener extends AbstractExecutionListener {
   public void mojoStarted(ExecutionEvent event) {
     Execution key = key(event);
     Long threadId = Thread.currentThread().getId();
-    Long threadTrackNum = threadToTrackNum.get(threadId);
+    AtomicLong threadTrackNum = threadToTrackNum.get(threadId);
     if (threadTrackNum == null) {
-      threadTrackNum = trackNum;
-      threadToTrackNum.put(threadId, threadTrackNum);
-      trackNum++;
+      // use this since we can not computeIfAbsent() yet
+      synchronized (this) {
+        //noinspection ConstantConditions
+        if (threadTrackNum == null) {
+          threadTrackNum = new AtomicLong(trackNum.getAndIncrement());
+          threadToTrackNum.put(threadId, threadTrackNum);
+        }
+      }
     }
     Integer colour = threadNumToColour.get(threadId);
     if (colour == null) {
@@ -79,11 +78,22 @@ public class BuildEventListener extends AbstractExecutionListener {
       threadNumToColour.put(threadId, colour);
     }
     executionMetrics.put(key, new Metric(key, Thread.currentThread().getId(), millis()));
-    timelineMetrics.put(key, new Event(key.toString(), threadTrackNum, colours[colour], nowInUtc()));
+    timelineMetrics.put(
+      key,
+      new Event(
+        threadTrackNum.get(),
+        nowInUtc(),
+        key.groupId,
+        key.artifactId,
+        key.phase,
+        key.goal,
+        key.id
+      )
+    );
   }
 
-  String nowInUtc() {
-    return new DateTime(DateTimeZone.UTC).toString();
+  private long nowInUtc() {
+    return new DateTime(DateTimeZone.UTC).getMillis();
   }
 
   @Override
@@ -108,7 +118,7 @@ public class BuildEventListener extends AbstractExecutionListener {
       return;
     }
     metric.setEnd(millis());
-    timelineMetric.setEnd(new DateTime(DateTimeZone.UTC).toString());
+    timelineMetric.setEnd(new DateTime(DateTimeZone.UTC).getMillis());
     timelineMetric.setDuration(metric.end - metric.start);
   }
 
@@ -133,21 +143,18 @@ public class BuildEventListener extends AbstractExecutionListener {
       throw new IOException("Unable to create " + path);
     }
 
-    Writer writer = new BufferedWriter(new FileWriter(output));
-    try {
+    try (Writer writer = new BufferedWriter(new FileWriter(output))) {
       Metric.array(writer, executionMetrics.values());
-    } finally {
-      writer.close();
     }
 
     exportTimeline();
   }
 
   private void exportTimeline() throws IOException {
-    endTime = nowInUtc();
+    long endTime = nowInUtc();
     WebUtils.copyResourcesToDirectory(getClass(), "timeline", mavenTimeline.getParentFile());
     try(Writer mavenTimelineWriter = new BufferedWriter(new FileWriter(mavenTimeline))) {
-      Timeline timeline = new Timeline(startTime, endTime, Lists.newArrayList(timelineMetrics.values()));
+      Timeline timeline = new Timeline(startTime, endTime, groupId, artifactId, Lists.newArrayList(timelineMetrics.values()));
       mavenTimelineWriter.write("window.timelineData = ");
       TimelineSerializer.serialize(mavenTimelineWriter, timeline);
       mavenTimelineWriter.write(";");
@@ -165,7 +172,7 @@ public class BuildEventListener extends AbstractExecutionListener {
     final String goal;
     final String id;
 
-    public Execution(String groupId, String artifactId, String phase, String goal, String id) {
+    Execution(String groupId, String artifactId, String phase, String goal, String id) {
       this.groupId = groupId;
       this.artifactId = artifactId;
       this.phase = phase;
@@ -174,65 +181,28 @@ public class BuildEventListener extends AbstractExecutionListener {
     }
 
     @Override
-    public int hashCode() {
-      final int prime = 31;
-      int result = 1;
-      result = prime * result + ((artifactId == null) ? 0 : artifactId.hashCode());
-      result = prime * result + ((goal == null) ? 0 : goal.hashCode());
-      result = prime * result + ((groupId == null) ? 0 : groupId.hashCode());
-      result = prime * result + ((id == null) ? 0 : id.hashCode());
-      result = prime * result + ((phase == null) ? 0 : phase.hashCode());
-      return result;
+    public boolean equals(Object o) {
+      if (this == o) return true;
+      if (o == null || getClass() != o.getClass()) return false;
+
+      Execution execution = (Execution) o;
+
+      if (groupId != null ? !groupId.equals(execution.groupId) : execution.groupId != null) return false;
+      if (artifactId != null ? !artifactId.equals(execution.artifactId) : execution.artifactId != null) return false;
+      if (phase != null ? !phase.equals(execution.phase) : execution.phase != null) return false;
+      //noinspection SimplifiableIfStatement
+      if (goal != null ? !goal.equals(execution.goal) : execution.goal != null) return false;
+      return id != null ? id.equals(execution.id) : execution.id == null;
     }
 
     @Override
-    public boolean equals(Object obj) {
-      if (this == obj) {
-        return true;
-      }
-      if (obj == null) {
-        return false;
-      }
-      if (getClass() != obj.getClass()) {
-        return false;
-      }
-      Execution other = (Execution) obj;
-      if (artifactId == null) {
-        if (other.artifactId != null) {
-          return false;
-        }
-      } else if (!artifactId.equals(other.artifactId)) {
-        return false;
-      }
-      if (goal == null) {
-        if (other.goal != null) {
-          return false;
-        }
-      } else if (!goal.equals(other.goal)) {
-        return false;
-      }
-      if (groupId == null) {
-        if (other.groupId != null) {
-          return false;
-        }
-      } else if (!groupId.equals(other.groupId)) {
-        return false;
-      }
-      if (id == null) {
-        if (other.id != null) {
-          return false;
-        }
-      } else if (!id.equals(other.id)) {
-        return false;
-      }
-      if (phase == null) {
-        if (other.phase != null) {
-          return false;
-        }
-      } else if (!phase.equals(other.phase)) {
-        return false;
-      }
-      return true;
+    public int hashCode() {
+      int result = groupId != null ? groupId.hashCode() : 0;
+      result = 31 * result + (artifactId != null ? artifactId.hashCode() : 0);
+      result = 31 * result + (phase != null ? phase.hashCode() : 0);
+      result = 31 * result + (goal != null ? goal.hashCode() : 0);
+      result = 31 * result + (id != null ? id.hashCode() : 0);
+      return result;
     }
 
     @Override
