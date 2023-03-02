@@ -15,7 +15,8 @@
  */
 package io.takari.maven.timeline.buildevents;
 
-import org.apache.maven.execution.*;
+import org.apache.maven.execution.ExecutionEvent;
+import org.apache.maven.execution.ExecutionListener;
 
 public class ExecutionListenerChain implements ExecutionListener {
   private final ExecutionListener first;

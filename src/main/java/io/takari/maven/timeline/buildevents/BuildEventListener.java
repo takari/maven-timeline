@@ -5,7 +5,6 @@
  */
 package io.takari.maven.timeline.buildevents;
 
-import com.google.common.collect.Lists;
 import io.takari.maven.timeline.Event;
 import io.takari.maven.timeline.Timeline;
 import io.takari.maven.timeline.TimelineSerializer;
@@ -17,7 +16,12 @@ import org.apache.maven.project.MavenProject;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -37,9 +41,9 @@ public final class BuildEventListener extends AbstractExecutionListener {
   private final Map<Execution, Event> timelineMetrics = new ConcurrentHashMap<>();
   private final Map<Long, AtomicLong> threadToTrackNum = new ConcurrentHashMap<>();
   private final Map<Long, Integer> threadNumToColour = new ConcurrentHashMap<>();
-  private AtomicLong trackNum = new AtomicLong(0);
+  private final AtomicLong trackNum = new AtomicLong(0);
 
-  private long startTime;
+  private final long startTime;
 
   public BuildEventListener(File output, File mavenTimeline, String artifactId, String groupId) {
     this.output = output;
@@ -154,7 +158,7 @@ public final class BuildEventListener extends AbstractExecutionListener {
     long endTime = nowInUtc();
     WebUtils.copyResourcesToDirectory(getClass(), "timeline", mavenTimeline.getParentFile());
     try(Writer mavenTimelineWriter = new BufferedWriter(new FileWriter(mavenTimeline))) {
-      Timeline timeline = new Timeline(startTime, endTime, groupId, artifactId, Lists.newArrayList(timelineMetrics.values()));
+      Timeline timeline = new Timeline(startTime, endTime, groupId, artifactId, new ArrayList<>(timelineMetrics.values()));
       mavenTimelineWriter.write("window.timelineData = ");
       TimelineSerializer.serialize(mavenTimelineWriter, timeline);
       mavenTimelineWriter.write(";");

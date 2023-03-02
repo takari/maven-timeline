@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -11,8 +12,6 @@ import java.security.CodeSource;
 import java.util.Enumeration;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-
-import com.google.common.io.ByteStreams;
 
 public class WebUtils {
 
@@ -65,10 +64,21 @@ public class WebUtils {
             parent.mkdirs();
           }
           try (FileOutputStream out = new FileOutputStream(dest); InputStream in = fromJar.getInputStream(entry)) {
-            ByteStreams.copy(in, out);
+            copy(in, out);
           }
         }
       }
+    }
+  }
+
+  private static void copy(InputStream from, OutputStream to) throws IOException {
+    byte[] buf = new byte[8192];
+    while (true) {
+      int r = from.read(buf);
+      if (r == -1) {
+        break;
+      }
+      to.write(buf, 0, r);
     }
   }
 
@@ -94,9 +104,9 @@ public class WebUtils {
 
   public void launch(String path, File jar, File outputDirectory) throws IOException {
     copyResourcesToDirectory(jar, "timeline", outputDirectory);
-    openUrl(new File("/tmp/timeline/timeline.html").toURI().toURL().toExternalForm());    
+    openUrl(new File("/tmp/timeline/timeline.html").toURI().toURL().toExternalForm());
   }
-  
+
   public static void main(String[] args) throws Exception {
     String path = "timeline/timeline.html";
     File jar = new File("/Users/jvanzyl/js/takari/maven-timeline/target/maven-timeline-1.4.jar");
