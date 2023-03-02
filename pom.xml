@@ -24,6 +24,7 @@
   </licenses>
 
   <properties>
+    <takari.lifecycleVersion>2.1.0</takari.lifecycleVersion>
     <takari.javaSourceVersion>7</takari.javaSourceVersion>
 
     <maven.version>3.2.5</maven.version>
