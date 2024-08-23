@@ -28,9 +28,6 @@ function TimeLineDb(timelineData) {
       .slice(0, limit)
       .forEach(e => renderFunc(e.groupId, e.artifactId, e.phase, e.goal, e.duration));
   };
-  this.getTrackCount = function(renderFunc) {
-    renderFunc(timelineData.events.length);
-  };
   this.getTotalPhaseDuration = function(renderFunc) {
     // "select phase, sum(duration) from events group by phase order by sum(duration) desc"
     Object.entries(timelineData.events
