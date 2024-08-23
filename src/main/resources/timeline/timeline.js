@@ -45,7 +45,7 @@ function TimeLine(timelineData) {
     durationLabel.innerText = twoDigits(durationTime.getUTCHours()) + ":" + twoDigits(durationTime.getUTCMinutes());
     if(zoomFactor < 10) {
       timeLabel.innerText = timeLabel.innerText + ":" + twoDigits(date.getUTCSeconds());
-      durationLabel.innerText = durationTime.innerText + ":" + twoDigits(durationTime.getUTCSeconds());
+      durationLabel.innerText = durationLabel.innerText + ":" + twoDigits(durationTime.getUTCSeconds());
     }
     var left = normalize(sessionStartTime, currentTime, zoomFactor);
 
