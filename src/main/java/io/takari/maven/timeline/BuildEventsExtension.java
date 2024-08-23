@@ -15,51 +15,45 @@
  */
 package io.takari.maven.timeline;
 
-import javax.inject.Named;
-import javax.inject.Singleton;
-
 import io.takari.maven.timeline.buildevents.BuildEventListener;
 import io.takari.maven.timeline.buildevents.ExecutionListenerChain;
-
 import java.io.File;
-
+import javax.inject.Named;
+import javax.inject.Singleton;
 import org.apache.maven.AbstractMavenLifecycleParticipant;
 import org.apache.maven.execution.ExecutionListener;
 import org.apache.maven.execution.MavenExecutionRequest;
 import org.apache.maven.execution.MavenSession;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
 
 @Singleton
 @Named("buildevents")
 public class BuildEventsExtension extends AbstractMavenLifecycleParticipant {
-  private static final String OUTPUT_FILE = "execution.metrics.output.file";
-  private static final String DEFAULT_FILE_DESTINATION = "target/execution-metrics.json";
+    private static final String OUTPUT_FILE = "execution.metrics.output.file";
+    private static final String DEFAULT_FILE_DESTINATION = "target/execution-metrics.json";
 
-  @Override
-  public void afterProjectsRead(MavenSession session) {
-    MavenExecutionRequest request = session.getRequest();
-    ExecutionListener original = request.getExecutionListener();
-    BuildEventListener listener = new BuildEventListener(logFile(session), mavenTimelineFile(session), session.getCurrentProject().getArtifactId(), session.getCurrentProject().getGroupId());
-    ExecutionListener chain = new ExecutionListenerChain(original, listener);
-    request.setExecutionListener(chain);
-  }
-
-  private File mavenTimelineFile(MavenSession session) {
-    return new File(session.getExecutionRootDirectory(), "target/timeline/maven-timeline.js");
-  }
-
-  private File logFile(MavenSession session) {
-    String path = session.getUserProperties().getProperty(OUTPUT_FILE, DEFAULT_FILE_DESTINATION);
-    if (new File(path).isAbsolute()) {
-      return new File(path);
+    @Override
+    public void afterProjectsRead(MavenSession session) {
+        MavenExecutionRequest request = session.getRequest();
+        ExecutionListener original = request.getExecutionListener();
+        BuildEventListener listener = new BuildEventListener(
+                logFile(session),
+                mavenTimelineFile(session),
+                session.getCurrentProject().getArtifactId(),
+                session.getCurrentProject().getGroupId());
+        ExecutionListener chain = new ExecutionListenerChain(original, listener);
+        request.setExecutionListener(chain);
     }
-    String buildDir = session.getExecutionRootDirectory();
-    return new File(buildDir, path);
-  }
 
-  public static void main(String[] args) {
-    String output = new DateTime(DateTimeZone.UTC).toString();
-    System.out.println(output);
-  }
+    private File mavenTimelineFile(MavenSession session) {
+        return new File(session.getExecutionRootDirectory(), "target/timeline/maven-timeline.js");
+    }
+
+    private File logFile(MavenSession session) {
+        String path = session.getUserProperties().getProperty(OUTPUT_FILE, DEFAULT_FILE_DESTINATION);
+        if (new File(path).isAbsolute()) {
+            return new File(path);
+        }
+        String buildDir = session.getExecutionRootDirectory();
+        return new File(buildDir, path);
+    }
 }
