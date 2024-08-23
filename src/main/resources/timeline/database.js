@@ -2,110 +2,65 @@
  * Created by Dominik on 10.12.2016.
  */
 function TimeLineDb(timelineData) {
-  db = openDatabase('mydb', '1.0', 'Test DB', 5 * 1024 * 1024);
 
-  db.onError = function(tx, e) {
-    alert("There has been an error: " + e.message);
-  };
-
-  db.transaction(function (tx) {
-    tx.executeSql('DROP TABLE IF EXISTS events');
-    tx.executeSql('CREATE TABLE events (start LONG, end LONG, duration INTEGER, trackNum INTEGER, groupId TEXT, artifactId TEXT, phase TEXT, goal TEXT, phaseId TEXT)');
-  });
-
-  db.transaction(function (tx) {
-    for(var index = 0; index < timelineData.events.length; index++) {
-      var event = timelineData.events[index];
-      tx.executeSql(
-        'INSERT INTO events (start, end, duration, trackNum, groupId, artifactId, phase, goal, phaseId) VALUES (?,?,?,?,?,?,?,?,?)',
-        [event.start,event.end,event.duration,event.trackNum,event.groupId,event.artifactId,event.phase,event.goal,event.id]
-      );
-    }
-  });
-
-  function errorHandler(transaction, sqlerror) {
-    console.log(sqlerror);
-  }
-
-  this.getPhases = function(renderFunc) {
-    db.transaction(function(tx) {
-      tx.executeSql("select phase from events group by phase", [], renderFunc, errorHandler);
-    });
-  };
   this.getTopPhases = function(limit, renderFunc) {
-    db.transaction(function(tx) {
-      tx.executeSql("select phase from events group by phase order by sum(duration) desc LIMIT ?", [limit], renderFunc, errorHandler);
-    });
-  };
-  this.getGoals = function(renderFunc) {
-    db.transaction(function(tx) {
-      tx.executeSql("select goal from events group by goal", [], renderFunc, errorHandler);
-    });
+    // "select phase from events group by phase order by sum(duration) desc LIMIT ?", [limit]
+    renderFunc(Object.entries(timelineData.events
+      .map(({phase, duration}) => ({phase, duration}))
+      .reduce((acc, {phase, duration}) => ({...acc, [phase]: (acc[phase] || 0) + duration}), {}))
+      .sort((a, b) => b[1] - a[1])
+      .map(([phase]) => ({phase}))
+      .slice(0, limit));
   };
   this.getTopGoals = function(limit, renderFunc) {
-    db.transaction(function(tx) {
-      tx.executeSql("select goal from events group by goal order by sum(duration) desc LIMIT ?", [limit], renderFunc, errorHandler);
-    });
-  };
-  this.getArtifactIds = function(renderFunc) {
-    db.transaction(function(tx) {
-      tx.executeSql("select artifactId from events group by artifactId", [], renderFunc, errorHandler);
-    });
+    // "select goal from events group by goal order by sum(duration) desc LIMIT ?", [limit]
+    renderFunc(Object.entries(timelineData.events
+      .map(({goal, duration}) => ({goal, duration}))
+      .reduce((acc, {goal, duration}) => ({...acc, [goal]: (acc[goal] || 0) + duration}), {}))
+      .sort((a, b) => b[1] - a[1])
+      .map(([goal]) => ({goal}))
+      .slice(0, limit));
   };
   this.getTopArtifacts = function(limit, renderFunc) {
-    db.transaction(function(tx) {
-      tx.executeSql("select groupId, artifactId, phase, goal, duration from events order by duration desc limit ?", [limit], function(tx, rs) {
-        for(var i = 0; i < rs.rows.length; i++) {
-          renderFunc(rs.rows[i]["groupId"], rs.rows[i]["artifactId"], rs.rows[i]["phase"], rs.rows[i]["goal"], rs.rows[i]["duration"]);
-        }
-      }, errorHandler);
-    });
-  };
-  this.getTracks = function(renderFunc) {
-    db.transaction(function(tx) {
-      tx.executeSql("select trackNum from events group by trackNum", [], renderFunc, errorHandler);
-    });
+    // "select groupId, artifactId, phase, goal, duration from events order by duration desc limit ?", [limit]
+    timelineData.events
+      .sort((a, b) => b.duration - a.duration)
+      .slice(0, limit)
+      .forEach(e => renderFunc(e.groupId, e.artifactId, e.phase, e.goal, e.duration));
   };
   this.getTrackCount = function(renderFunc) {
-    this.getTracks(function(tx, rs) {
-      renderFunc(rs.rows.length);
-    });
+    renderFunc(timelineData.events.length);
   };
   this.getTotalPhaseDuration = function(renderFunc) {
-    db.transaction(function(tx) {
-      tx.executeSql("select phase, sum(duration) from events group by phase order by sum(duration) desc", [], function(tx, rs) {
-        for(var i = 0; i < rs.rows.length; i++) {
-          renderFunc(rs.rows[i]["phase"], rs.rows[i]["sum(duration)"]);
-        }
-      }, errorHandler
-      );
-    });
+    // "select phase, sum(duration) from events group by phase order by sum(duration) desc"
+    Object.entries(timelineData.events
+      .map(({phase, duration}) => ({phase, duration}))
+      .reduce((acc, {phase, duration}) => ({...acc, [phase]: (acc[phase] || 0) + duration}), {}))
+      .sort((a, b) => b[1] - a[1])
+      .forEach(([phase, duration]) => renderFunc(phase, duration));
   };
   this.getTotalGoalDuration = function(renderFunc) {
-    db.transaction(function(tx) {
-      tx.executeSql("select goal, sum(duration) from events group by goal order by sum(duration) desc", [], function(tx, rs) {
-        for(var i = 0; i < rs.rows.length; i++) {
-          renderFunc(rs.rows[i]["goal"], rs.rows[i]["sum(duration)"]);
-        }
-      }, errorHandler);
-    });
+    // "select goal, sum(duration) from events group by goal order by sum(duration) desc"
+    Object.entries(timelineData.events
+      .map(({goal, duration}) => ({goal, duration}))
+      .reduce((acc, {goal, duration}) => ({...acc, [goal]: (acc[goal] || 0) + duration}), {}))
+      .sort((a, b) => b[1] - a[1])
+      .forEach(([goal, duration]) => renderFunc(goal, duration));
   };
   this.getTotalArtifactDuration = function(renderFunc) {
-    db.transaction(function(tx) {
-      tx.executeSql("select artifactId, sum(duration) from events group by artifactId order by sum(duration) desc", [], function(tx, rs) {
-        for(var i = 0; i < rs.rows.length; i++) {
-          renderFunc(rs.rows[i]["artifactId"], rs.rows[i]["sum(duration)"]);
-        }
-      }, errorHandler);
-    });
+    // "select artifactId, sum(duration) from events group by artifactId order by sum(duration) desc"
+    Object.entries(timelineData.events
+      .map(({artifactId, duration}) => ({artifactId, duration}))
+      .reduce((acc, {artifactId, duration}) => ({...acc, [artifactId]: (acc[artifactId] || 0) + duration}), {}))
+      .sort((a, b) => b[1] - a[1])
+      .forEach(([artifactId, duration]) => renderFunc(artifactId, duration));
   };
   this.getTotalTrackDuration = function(renderFunc) {
-    db.transaction(function(tx) {
-      tx.executeSql("select trackNum, sum(duration) from events group by trackNum order by sum(trackNum) desc", [], function(tx, rs) {
-        for(var i = 0; i < rs.rows.length; i++) {
-          renderFunc(rs.rows[i]["trackNum"], rs.rows[i]["sum(duration)"]);
-        }
-      }, errorHandler);
-    });
+    // "select trackNum, sum(duration) from events group by trackNum order by sum(trackNum) desc"
+    Object.entries(timelineData.events
+      .map(({trackNum, duration}) => ({trackNum, duration}))
+      .reduce((acc, {trackNum, duration}) => ({...acc, [trackNum]: (acc[trackNum] || 0) + duration}), {}))
+      .sort((a, b) => b[1] - a[1])
+      .forEach(([trackNum, duration]) => renderFunc(trackNum, duration));
   };
 }

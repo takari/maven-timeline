@@ -117,26 +117,26 @@ function TimeLineApp() {
     legendElement.innerText = "Highlight by phase";
     controlsContainer.appendChild(legendElement);
 
-    timeLineDb.getTopPhases(HIGHLIGHTED_ITEMS, function(tx, rs) {
+    timeLineDb.getTopPhases(HIGHLIGHTED_ITEMS, function(rows) {
       var themeIndex = 0;
-      for(var i = 0; i < rs.rows.length; i++, themeIndex++) {
+      for(var i = 0; i < rows.length; i++, themeIndex++) {
         if(themeIndex >= (window.highlightColorTheme.length)) {
           themeIndex = 0;
         }
-        appendHighlightToggle(controlsContainer, "phase-", rs.rows[i]["phase"], themeIndex);
+        appendHighlightToggle(controlsContainer, "phase-", rows[i]["phase"], themeIndex);
       }
 
       legendElement = document.createElement("legend");
       legendElement.innerText = "Highlight by goal";
       controlsContainer.appendChild(legendElement);
 
-      timeLineDb.getTopGoals(HIGHLIGHTED_ITEMS, function(tx, rs) {
+      timeLineDb.getTopGoals(HIGHLIGHTED_ITEMS, function(rows) {
         var themeIndex = 0;
-        for(var i = 0; i < rs.rows.length; i++, themeIndex++) {
+        for(var i = 0; i < rows.length; i++, themeIndex++) {
           if(themeIndex >= (window.highlightColorTheme.length)) {
              themeIndex = 0;
           }
-          appendHighlightToggle(controlsContainer, "goal-", rs.rows[i]["goal"], window.highlightColorTheme.length - 1 - themeIndex);
+          appendHighlightToggle(controlsContainer, "goal-", rows[i]["goal"], window.highlightColorTheme.length - 1 - themeIndex);
         }
       });
     });
