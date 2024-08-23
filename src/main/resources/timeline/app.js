@@ -168,12 +168,11 @@ function TimeLineApp() {
     $("#" + name).on("change", function (e) {
       var attribute = e.target.getAttribute("data-title");
 
-      var sheet = document.styleSheets[0];
       if (e.target.checked == true) {
-        sheet.addRule("." + attribute, "display: inline;");
+        $("." + attribute).show();
       }
       else {
-        sheet.addRule("." + attribute, "display: none;");
+        $("." + attribute).hide();
       }
     });
   }
