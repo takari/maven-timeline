@@ -1,5 +1,8 @@
 # Takari Maven Timeline
 
+[![Maven Central](https://img.shields.io/maven-central/v/io/takari.maven/maven-timeline.svg?label=Maven%20Central)](https://search.maven.org/artifact/io.takari.maven/maven-timeline)
+[![Reproducible Builds](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/jvm-repo-rebuild/reproducible-central/master/content/io/takari/maven/maven-timeline/badge.json)](https://github.com/jvm-repo-rebuild/reproducible-central/blob/master/content/io/takari/maven/maven-timeline/README.md)
+
 ## How to generate a timeline for your project
 
 To generate a timeline for your project add this section to your `pom.xml`:
