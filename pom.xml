@@ -24,6 +24,13 @@
     </license>
   </licenses>
 
+  <scm>
+    <connection>scm:git:git@github.com:takari/maven-timeline.git</connection>
+    <developerConnection>scm:git:git@github.com:takari/maven-timeline.git</developerConnection>
+    <tag>HEAD</tag>
+    <url>https://github.com/takari/maven-timeline</url>
+  </scm>
+
   <properties>
     <takari.javaSourceVersion>8</takari.javaSourceVersion>
     <version.maven>3.6.3</version.maven>
