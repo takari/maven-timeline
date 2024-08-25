@@ -4,7 +4,7 @@
   <parent>
     <groupId>io.takari</groupId>
     <artifactId>takari</artifactId>
-    <version>55</version>
+    <version>56</version>
   </parent>
   <groupId>io.takari.maven</groupId>
   <artifactId>maven-timeline</artifactId>
@@ -32,6 +32,7 @@
   </scm>
 
   <properties>
+    <takari.lifecycleVersion>2.1.7</takari.lifecycleVersion>
     <takari.javaSourceVersion>8</takari.javaSourceVersion>
     <version.maven>3.6.3</version.maven>
     <version.slf4j>1.7.36</version.slf4j>
