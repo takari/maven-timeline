@@ -6,7 +6,7 @@
 
 ## How to generate a timeline for your project
 
-To generate a timeline for your project add this section to your `pom.xml`:
+To generate a timeline for your project add this to the `build` section of your `pom.xml`:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
