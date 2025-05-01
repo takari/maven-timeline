@@ -1,13 +1,15 @@
 package io.takari.maven.timeline;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.CodeSource;
 import java.util.Enumeration;
 import java.util.jar.JarEntry;
@@ -53,12 +55,13 @@ public class WebUtils {
             for (Enumeration<JarEntry> entries = fromJar.entries(); entries.hasMoreElements(); ) {
                 JarEntry entry = entries.nextElement();
                 if (entry.getName().startsWith(jarDirectory + "/") && !entry.isDirectory()) {
-                    File dest = new File(outputDirectory + "/" + entry.getName().substring(jarDirectory.length() + 1));
-                    File parent = dest.getParentFile();
+                    Path dest =
+                            Paths.get(outputDirectory + "/" + entry.getName().substring(jarDirectory.length() + 1));
+                    Path parent = dest.getParent();
                     if (parent != null) {
-                        parent.mkdirs();
+                        Files.createDirectories(parent);
                     }
-                    try (FileOutputStream out = new FileOutputStream(dest);
+                    try (OutputStream out = Files.newOutputStream(dest);
                             InputStream in = fromJar.getInputStream(entry)) {
                         copy(in, out);
                     }
@@ -92,9 +95,9 @@ public class WebUtils {
     private static File urlToFile(URL url) {
         File f;
         try {
-            f = new File(url.toURI());
+            f = Paths.get(url.toURI()).toFile();
         } catch (URISyntaxException e) {
-            f = new File(url.getPath());
+            f = Paths.get(url.getPath()).toFile();
         }
         return f;
     }

@@ -9,11 +9,10 @@ import io.takari.maven.timeline.Event;
 import io.takari.maven.timeline.Timeline;
 import io.takari.maven.timeline.TimelineSerializer;
 import io.takari.maven.timeline.WebUtils;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
@@ -143,7 +142,7 @@ public final class BuildEventListener extends AbstractExecutionListener {
             throw new IOException("Unable to create " + path);
         }
 
-        try (Writer writer = new BufferedWriter(new FileWriter(output))) {
+        try (Writer writer = Files.newBufferedWriter(output.toPath())) {
             Metric.array(writer, executionMetrics.values());
         }
 
@@ -153,7 +152,7 @@ public final class BuildEventListener extends AbstractExecutionListener {
     private void exportTimeline() throws IOException {
         long endTime = nowInUtc();
         WebUtils.copyResourcesToDirectory(getClass(), "timeline", mavenTimeline.getParentFile());
-        try (Writer mavenTimelineWriter = new BufferedWriter(new FileWriter(mavenTimeline))) {
+        try (Writer mavenTimelineWriter = Files.newBufferedWriter(mavenTimeline.toPath())) {
             Timeline timeline =
                     new Timeline(startTime, endTime, groupId, artifactId, new ArrayList<>(timelineMetrics.values()));
             mavenTimelineWriter.write("window.timelineData = ");

@@ -18,6 +18,7 @@ package io.takari.maven.timeline;
 import io.takari.maven.timeline.buildevents.BuildEventListener;
 import io.takari.maven.timeline.buildevents.ExecutionListenerChain;
 import java.io.File;
+import java.nio.file.Paths;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import org.apache.maven.AbstractMavenLifecycleParticipant;
@@ -45,15 +46,16 @@ public class BuildEventsExtension extends AbstractMavenLifecycleParticipant {
     }
 
     private File mavenTimelineFile(MavenSession session) {
-        return new File(session.getExecutionRootDirectory(), "target/timeline/maven-timeline.js");
+        return Paths.get(session.getExecutionRootDirectory(), "target/timeline/maven-timeline.js")
+                .toFile();
     }
 
     private File logFile(MavenSession session) {
         String path = session.getUserProperties().getProperty(OUTPUT_FILE, DEFAULT_FILE_DESTINATION);
-        if (new File(path).isAbsolute()) {
-            return new File(path);
+        if (Paths.get(path).isAbsolute()) {
+            return Paths.get(path).toFile();
         }
         String buildDir = session.getExecutionRootDirectory();
-        return new File(buildDir, path);
+        return Paths.get(buildDir, path).toFile();
     }
 }
