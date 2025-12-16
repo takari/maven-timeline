@@ -59,8 +59,9 @@ function TimeLine(timelineData) {
 
   function description(event) {
     return event.groupId + ":" +
-      event.artifactId + ":" +
-      event.artifactId + ":" +
+      event.artifactId + " | " +
+      event.mojoGroupId + ":" +
+      event.mojoArtifactId + " | " +
       event.phase + ":" +
       event.goal + ":" +
       event.id + "(" +
@@ -101,6 +102,8 @@ function TimeLine(timelineData) {
       container.appendChild(div);
       addProperty(div, event, "groupId");
       addProperty(div, event, "artifactId");
+      addProperty(div, event, "mojoGroupId");
+      addProperty(div, event, "mojoArtifactId");
       addProperty(div, event, "phase");
       addProperty(div, event, "goal");
       if (event.id.indexOf("default-" != 0)) {

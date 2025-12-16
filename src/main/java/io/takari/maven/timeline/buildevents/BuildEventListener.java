@@ -83,7 +83,16 @@ public final class BuildEventListener extends AbstractExecutionListener {
         executionMetrics.put(key, new Metric(key, Thread.currentThread().getId(), millis()));
         timelineMetrics.put(
                 key,
-                new Event(threadTrackNum.get(), nowInUtc(), key.groupId, key.artifactId, key.phase, key.goal, key.id));
+                new Event(
+                        threadTrackNum.get(),
+                        nowInUtc(),
+                        key.groupId,
+                        key.artifactId,
+                        key.mojoGroupId,
+                        key.mojoArtifactId,
+                        key.phase,
+                        key.goal,
+                        key.id));
     }
 
     private long nowInUtc() {
@@ -131,6 +140,8 @@ public final class BuildEventListener extends AbstractExecutionListener {
         return new Execution(
                 project.getGroupId(),
                 project.getArtifactId(),
+                mojo.getGroupId(),
+                mojo.getArtifactId(),
                 mojo.getLifecyclePhase(),
                 mojo.getGoal(),
                 mojo.getExecutionId());
@@ -168,13 +179,24 @@ public final class BuildEventListener extends AbstractExecutionListener {
     static class Execution {
         final String groupId;
         final String artifactId;
+        final String mojoGroupId;
+        final String mojoArtifactId;
         final String phase;
         final String goal;
         final String id;
 
-        Execution(String groupId, String artifactId, String phase, String goal, String id) {
+        Execution(
+                String groupId,
+                String artifactId,
+                String mojoGroupId,
+                String mojoArtifactId,
+                String phase,
+                String goal,
+                String id) {
             this.groupId = groupId;
             this.artifactId = artifactId;
+            this.mojoGroupId = mojoGroupId;
+            this.mojoArtifactId = mojoArtifactId;
             this.phase = phase;
             this.goal = goal;
             this.id = id;
@@ -187,9 +209,12 @@ public final class BuildEventListener extends AbstractExecutionListener {
 
             Execution execution = (Execution) o;
 
-            if (groupId != null ? !groupId.equals(execution.groupId) : execution.groupId != null) return false;
-            if (artifactId != null ? !artifactId.equals(execution.artifactId) : execution.artifactId != null)
+            if (!gaCoordinatesEqual(groupId, artifactId, execution.groupId, execution.artifactId)
+                    || !gaCoordinatesEqual(
+                            mojoGroupId, mojoArtifactId, execution.mojoGroupId, execution.mojoArtifactId)) {
                 return false;
+            }
+
             if (phase != null ? !phase.equals(execution.phase) : execution.phase != null) return false;
             //noinspection SimplifiableIfStatement
             if (goal != null ? !goal.equals(execution.goal) : execution.goal != null) return false;
@@ -200,6 +225,8 @@ public final class BuildEventListener extends AbstractExecutionListener {
         public int hashCode() {
             int result = groupId != null ? groupId.hashCode() : 0;
             result = 31 * result + (artifactId != null ? artifactId.hashCode() : 0);
+            result = 31 * result + (mojoGroupId != null ? mojoGroupId.hashCode() : 0);
+            result = 31 * result + (mojoArtifactId != null ? mojoArtifactId.hashCode() : 0);
             result = 31 * result + (phase != null ? phase.hashCode() : 0);
             result = 31 * result + (goal != null ? goal.hashCode() : 0);
             result = 31 * result + (id != null ? id.hashCode() : 0);
@@ -208,7 +235,16 @@ public final class BuildEventListener extends AbstractExecutionListener {
 
         @Override
         public String toString() {
-            return groupId + ":" + artifactId + ":" + phase + ":" + goal + ":" + id;
+            return groupId + ":" + artifactId + ":" + mojoGroupId + ":" + mojoArtifactId + ":" + phase + ":" + goal
+                    + ":" + id;
+        }
+
+        private boolean gaCoordinatesEqual(
+                String ourGroup, String ourArtifact, String theirGroup, String theirArtifact) {
+            if (ourGroup != null ? !ourGroup.equals(theirGroup) : theirGroup != null) return false;
+            if (ourArtifact != null ? !ourArtifact.equals(theirArtifact) : theirArtifact != null) return false;
+
+            return true;
         }
     }
 
@@ -232,6 +268,8 @@ public final class BuildEventListener extends AbstractExecutionListener {
             return record(
                     value("groupId", execution.groupId),
                     value("artifactId", execution.artifactId),
+                    value("mojoGroupId", execution.mojoGroupId),
+                    value("mojoArtifactId", execution.mojoArtifactId),
                     value("phase", execution.phase),
                     value("goal", execution.goal),
                     value("id", execution.id),

@@ -9,15 +9,28 @@ public class Event {
     private final long trackNum;
     private final String groupId;
     private final String artifactId;
+    private final String mojoGroupId;
+    private final String mojoArtifactId;
     private final String phase;
     private final String goal;
     private final String id;
 
-    public Event(long trackNum, long start, String groupId, String artifactId, String phase, String goal, String id) {
+    public Event(
+            long trackNum,
+            long start,
+            String groupId,
+            String artifactId,
+            String mojoGroupId,
+            String mojoArtifactId,
+            String phase,
+            String goal,
+            String id) {
         this.start = start;
         this.trackNum = trackNum;
         this.groupId = groupId;
         this.artifactId = artifactId;
+        this.mojoGroupId = mojoGroupId;
+        this.mojoArtifactId = mojoArtifactId;
         this.phase = phase;
         this.goal = goal;
         this.id = id;

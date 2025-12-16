@@ -103,6 +103,8 @@ function TimeLineApp() {
 
     appendCssClassToggle(controlsContainer, "groupId", false);
     appendCssClassToggle(controlsContainer, "artifactId", true);
+    appendCssClassToggle(controlsContainer, "mojoGroupId", false);
+    appendCssClassToggle(controlsContainer, "mojoArtifactId", false);
     appendCssClassToggle(controlsContainer, "goal", false);
     appendCssClassToggle(controlsContainer, "phase", true);
     appendCssClassToggle(controlsContainer, "id", false);
