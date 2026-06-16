@@ -47,10 +47,12 @@ import org.eclipse.aether.RepositorySystemSession;
 @Singleton
 @Named
 public final class TimelineListener extends AbstractEventSpy {
-    private static final String METRICS_OUTPUT_FILE = "execution.metrics.output.file";
+    private static final String METRICS_OUTPUT_FILE = "maven-timeline.metrics.output.file";
     private static final String DEFAULT_METRICS_OUTPUT_FILE = "target/execution-metrics.json";
-    private static final String TIMELINE_OUTPUT_FILE = "execution.timeline.output.file";
+    private static final String TIMELINE_OUTPUT_FILE = "maven-timeline.timeline.output.file";
     private static final String DEFAULT_TIMELINE_OUTPUT_FILE = "target/timeline/maven-timeline.js";
+    private static final String ENABLED = "maven-timeline.enabled";
+    private static final String DEFAULT_ENABLED = Boolean.TRUE.toString();
 
     private static final class Data {
         private final long start;
@@ -65,48 +67,56 @@ public final class TimelineListener extends AbstractEventSpy {
         }
     }
 
-    private Data getData(RepositorySystemSession session) {
-        return (Data)
-                session.getData().computeIfAbsent(getClass().getSimpleName() + ".data", () -> new Data(nowInUtc()));
+    private final boolean enabled;
+
+    public TimelineListener() {
+        this.enabled = Boolean.parseBoolean(System.getProperty(ENABLED, DEFAULT_ENABLED));
     }
 
     @Override
     public void onEvent(Object event) throws Exception {
-        if (event instanceof ExecutionEvent) {
-            ExecutionEvent executionEvent = (ExecutionEvent) event;
-            switch (executionEvent.getType()) {
-                case SessionStarted:
-                    sessionStarted(executionEvent);
-                    break;
-                case SessionEnded:
-                    sessionEnded(executionEvent);
-                    break;
-                case MojoStarted:
-                    mojoStarted(executionEvent);
-                    break;
-                case MojoSkipped:
-                    mojoSkipped(executionEvent);
-                    break;
-                case MojoSucceeded:
-                    mojoSucceeded(executionEvent);
-                    break;
-                case MojoFailed:
-                    mojoFailed(executionEvent);
-                    break;
-            }
-        } else if (event instanceof RepositoryEvent) {
-            RepositoryEvent repositoryEvent = (RepositoryEvent) event;
-            switch (repositoryEvent.getType()) {
-                case ARTIFACT_RESOLVING:
-                case METADATA_RESOLVING:
-                    resolving(repositoryEvent);
-                    break;
-                case ARTIFACT_RESOLVED:
-                case METADATA_RESOLVED:
-                    resolved(repositoryEvent);
-                    break;
+        if (enabled) {
+            if (event instanceof ExecutionEvent) {
+                ExecutionEvent executionEvent = (ExecutionEvent) event;
+                switch (executionEvent.getType()) {
+                    case SessionStarted:
+                        sessionStarted(executionEvent);
+                        break;
+                    case SessionEnded:
+                        sessionEnded(executionEvent);
+                        break;
+                    case MojoStarted:
+                        mojoStarted(executionEvent);
+                        break;
+                    case MojoSkipped:
+                        mojoSkipped(executionEvent);
+                        break;
+                    case MojoSucceeded:
+                        mojoSucceeded(executionEvent);
+                        break;
+                    case MojoFailed:
+                        mojoFailed(executionEvent);
+                        break;
+                }
+            } else if (event instanceof RepositoryEvent) {
+                RepositoryEvent repositoryEvent = (RepositoryEvent) event;
+                switch (repositoryEvent.getType()) {
+                    case ARTIFACT_RESOLVING:
+                    case METADATA_RESOLVING:
+                        resolving(repositoryEvent);
+                        break;
+                    case ARTIFACT_RESOLVED:
+                    case METADATA_RESOLVED:
+                        resolved(repositoryEvent);
+                        break;
+                }
             }
         }
+    }
+
+    private Data getData(RepositorySystemSession session) {
+        return (Data)
+                session.getData().computeIfAbsent(getClass().getSimpleName() + ".data", () -> new Data(nowInUtc()));
     }
 
     private void resolving(RepositoryEvent repositoryEvent) {
