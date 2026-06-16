@@ -27,11 +27,15 @@ Once your project has run you will have a `target/timeline/timeline.html` in the
 
 ## Configuration
 
-Use following Java System Properties (not Maven User Properties!):
+Use following properties:
 
-* `maven-timeline.enabled` to enable or disable Timeline creation and export, default is `true`
-* `maven-timeline.metrics.output.file` the output of metrics JSON file, default is `target/execution-metrics.json`
-* `maven-timeline.timeline.output.file` the output of Timeline (data and HTML/JS), default is `target/timeline/maven-timeline.js`
+* **Java System Property** `maven-timeline.enabled` to enable or disable Timeline creation and export, default is `true`.
+* Maven Config Property `maven-timeline.discriminator` that moves the `outputDirectory` (default is build directory, ie `target/`) with specified discriminator, default is `null` (does not discriminate output).
+* Maven Config Property `maven-timeline.metrics.output.file` the output of metrics JSON file, default is top level project `${outputDirectory}/execution-metrics.json`
+* Maven Config Property `maven-timeline.timeline.output.file` the output of Timeline (data and HTML/JS), default is top level project `${outputDirectory}/timeline/maven-timeline.js`
+
+Note: Java System Properties must be set via `MAVEN_OPTS` or via `.mvn/jvm.config`, while
+Maven Config Property can be set via `-D` command line or in `.mvn/maven.config`, see https://maven.apache.org/configure.html
 
 ![Maven Timeline](maven-timeline.png)
 

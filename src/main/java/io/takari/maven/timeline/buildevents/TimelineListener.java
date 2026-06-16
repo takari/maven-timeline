@@ -39,6 +39,8 @@ import org.apache.maven.plugin.MojoExecution;
 import org.apache.maven.project.MavenProject;
 import org.eclipse.aether.RepositoryEvent;
 import org.eclipse.aether.RepositorySystemSession;
+import org.eclipse.aether.util.ConfigUtils;
+import org.slf4j.LoggerFactory;
 
 // adjacent bars should be a different color
 // highlight the critical path
@@ -47,10 +49,11 @@ import org.eclipse.aether.RepositorySystemSession;
 @Singleton
 @Named
 public final class TimelineListener extends AbstractEventSpy {
-    private static final String METRICS_OUTPUT_FILE = "maven-timeline.metrics.output.file";
-    private static final String DEFAULT_METRICS_OUTPUT_FILE = "target/execution-metrics.json";
-    private static final String TIMELINE_OUTPUT_FILE = "maven-timeline.timeline.output.file";
-    private static final String DEFAULT_TIMELINE_OUTPUT_FILE = "target/timeline/maven-timeline.js";
+    private static final String METRICS_OUTPUT_FILE = "maven-timeline.metrics.output";
+    private static final String DEFAULT_METRICS_OUTPUT_FILE = "execution-metrics.json";
+    private static final String TIMELINE_OUTPUT_FILE = "maven-timeline.timeline.output";
+    private static final String DEFAULT_TIMELINE_OUTPUT_FILE = "timeline/maven-timeline.js";
+    private static final String DISCRIMINATOR = "maven-timeline.discriminator";
     private static final String ENABLED = "maven-timeline.enabled";
     private static final String DEFAULT_ENABLED = Boolean.TRUE.toString();
 
@@ -220,12 +223,39 @@ public final class TimelineListener extends AbstractEventSpy {
 
     private void sessionEnded(ExecutionEvent event) throws IOException {
         Data data = getData(event.getSession().getRepositorySession());
-        exportExecutionMetrics(data, path(event.getSession(), METRICS_OUTPUT_FILE, DEFAULT_METRICS_OUTPUT_FILE));
-        exportTimeline(
-                data,
-                path(event.getSession(), TIMELINE_OUTPUT_FILE, DEFAULT_TIMELINE_OUTPUT_FILE),
-                event.getSession().getTopLevelProject().getGroupId(),
-                event.getSession().getTopLevelProject().getArtifactId());
+        MavenSession session = event.getSession();
+        Path buildDirectory = null;
+        if (session.getTopLevelProject() != null
+                && session.getTopLevelProject().getBuild() != null
+                && session.getTopLevelProject().getBuild().getDirectory() != null) {
+            // target/
+            buildDirectory = Paths.get(session.getTopLevelProject().getBuild().getDirectory());
+        } else if (session.getExecutionRootDirectory() != null) {
+            // cwd
+            buildDirectory = Paths.get(session.getExecutionRootDirectory());
+        }
+
+        if (buildDirectory != null) {
+            RepositorySystemSession rss = session.getRepositorySession();
+            String discriminator = ConfigUtils.getString(rss, null, DISCRIMINATOR);
+            if (discriminator != null) {
+                buildDirectory = buildDirectory.resolve(discriminator);
+            }
+
+            exportExecutionMetrics(
+                    data,
+                    buildDirectory.resolve(
+                            ConfigUtils.getString(rss, DEFAULT_METRICS_OUTPUT_FILE, METRICS_OUTPUT_FILE)));
+            exportTimeline(
+                    data,
+                    buildDirectory.resolve(
+                            ConfigUtils.getString(rss, DEFAULT_TIMELINE_OUTPUT_FILE, TIMELINE_OUTPUT_FILE)),
+                    event.getSession().getTopLevelProject().getGroupId(),
+                    event.getSession().getTopLevelProject().getArtifactId());
+        } else {
+            LoggerFactory.getLogger(getClass())
+                    .warn("Maven Timeline could not determine output directory; no output written");
+        }
     }
 
     private void mojoEnd(ExecutionEvent event) {
@@ -239,15 +269,6 @@ public final class TimelineListener extends AbstractEventSpy {
         metric.setEnd(millis(data));
         timelineMetric.setEnd(System.currentTimeMillis());
         timelineMetric.setDuration(metric.end - metric.start);
-    }
-
-    private Path path(MavenSession session, String key, String defaultValue) {
-        Path path = Paths.get(session.getUserProperties().getProperty(key, defaultValue));
-        if (path.isAbsolute()) {
-            return path;
-        }
-        String buildDir = session.getExecutionRootDirectory();
-        return Paths.get(buildDir).resolve(path);
     }
 
     private Execution key(ExecutionEvent event) {
