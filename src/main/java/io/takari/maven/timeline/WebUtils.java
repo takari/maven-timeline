@@ -14,7 +14,6 @@ import java.security.CodeSource;
 import java.util.Enumeration;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import org.slf4j.LoggerFactory;
 
 public class WebUtils {
 
@@ -45,7 +44,8 @@ public class WebUtils {
                 }
             }
         } catch (Exception e) {
-            LoggerFactory.getLogger(WebUtils.class).warn("Could not open URL: " + url, e);
+            System.err.println("Could not open URL: " + url);
+            e.printStackTrace(System.err);
         }
     }
 

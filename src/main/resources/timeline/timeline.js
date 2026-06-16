@@ -106,7 +106,7 @@ function TimeLine(timelineData) {
       addProperty(div, event, "mojoArtifactId");
       addProperty(div, event, "phase");
       addProperty(div, event, "goal");
-      if (event.id.indexOf("default-" != 0)) {
+      if (event.id.indexOf("default-") != 0) {
         addProperty(div, event, "id");
       }
       addProperty(div, event, "duration");
