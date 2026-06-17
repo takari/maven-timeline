@@ -18,7 +18,7 @@ To generate a timeline for your project add this to the `build` section of your 
   <extension>
     <groupId>io.takari.maven</groupId>
     <artifactId>maven-timeline</artifactId>
-    <version>2.0.3</version>
+    <version>2.1.0</version>
   </extension>
 </extensions>
 ```
