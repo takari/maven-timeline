@@ -28,11 +28,13 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -61,7 +63,7 @@ public final class TimelineListener extends AbstractEventSpy {
     static final String DEFAULT_METRICS_OUTPUT_FILE = "execution-metrics.json";
     static final String TIMELINE_OUTPUT_FILE = "maven-timeline.timeline.output.file";
     static final String TIMELINE_OUTPUT_FILE_LEGACY = "maven-timeline.timeline.output"; // used by 2.1.0 and earlier
-    static final String DEFAULT_TIMELINE_OUTPUT_FILE = "timeline/maven-timeline.js";
+    static final String DEFAULT_TIMELINE_OUTPUT_FILE = "timeline/timeline.html";
     static final String DISCRIMINATOR = "maven-timeline.discriminator";
     static final String ENABLED = "maven-timeline.enabled";
 
@@ -305,6 +307,7 @@ public final class TimelineListener extends AbstractEventSpy {
         exportExecutionMetrics(
                 data,
                 events,
+                criticalPath,
                 buildDirectory.resolve(ConfigUtils.getString(
                         rss, DEFAULT_METRICS_OUTPUT_FILE, METRICS_OUTPUT_FILE, METRICS_OUTPUT_FILE_LEGACY)));
         exportTimeline(
@@ -355,7 +358,9 @@ public final class TimelineListener extends AbstractEventSpy {
         return last;
     }
 
-    private void exportExecutionMetrics(Data data, List<Event> events, Path metrics) throws IOException {
+    private void exportExecutionMetrics(Data data, List<Event> events, List<String> criticalPath, Path metrics)
+            throws IOException {
+        Set<String> critical = new HashSet<>(criticalPath);
         List<Map<String, Object>> records = new ArrayList<>();
         for (Event e : events) {
             Map<String, Object> r = new LinkedHashMap<>();
@@ -367,9 +372,11 @@ public final class TimelineListener extends AbstractEventSpy {
             r.put("goal", e.goal);
             r.put("id", e.id);
             r.put("threadId", e.threadId);
+            r.put("threadName", data.trackNames.get((int) e.trackNum));
             r.put("start", e.start - data.start);
             r.put("end", e.end - data.start);
             r.put("failed", e.failed);
+            r.put("critical", !e.resolver && critical.contains(e.groupId + ":" + e.artifactId) ? Boolean.TRUE : null);
             records.add(r);
         }
         Files.createDirectories(metrics.getParent());
@@ -378,13 +385,10 @@ public final class TimelineListener extends AbstractEventSpy {
         }
     }
 
-    /** Writes the data file, plus timeline.html next to it with all scripts, styles and data inlined. */
+    /** Writes a single self-contained HTML file with all scripts, styles and data inlined. */
     private void exportTimeline(Path timelinePath, Timeline timeline) throws IOException {
         Files.createDirectories(timelinePath.getParent());
         String data = "window.timelineData = " + GSON.toJson(timeline) + ";"; // Gson escapes '<', so no "</script>"
-        try (Writer writer = Files.newBufferedWriter(timelinePath)) {
-            writer.write(data);
-        }
         String html = resource("timeline.html")
                 .replace("<script src=\"maven-timeline.js\"></script>", "<script>\n" + data + "\n</script>")
                 .replace(
@@ -394,7 +398,7 @@ public final class TimelineListener extends AbstractEventSpy {
             html = html.replace(
                     "<script src=\"" + script + "\"></script>", "<script>\n" + resource(script) + "</script>");
         }
-        try (Writer writer = Files.newBufferedWriter(timelinePath.resolveSibling("timeline.html"))) {
+        try (Writer writer = Files.newBufferedWriter(timelinePath)) {
             writer.write(html);
         }
     }

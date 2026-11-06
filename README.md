@@ -45,7 +45,7 @@ Use following properties:
 * **Java System Property** `maven-timeline.enabled` to enable or disable Timeline creation and export, default is `true`.
 * Maven Config Property `maven-timeline.discriminator` that moves the `outputDirectory` (default is build directory, ie `target/`) with specified discriminator, default is `null` (does not discriminate output).
 * Maven Config Property `maven-timeline.metrics.output.file` the output of metrics JSON file, default is top level project `${outputDirectory}/execution-metrics.json`
-* Maven Config Property `maven-timeline.timeline.output.file` the output of Timeline (data and HTML/JS), default is top level project `${outputDirectory}/timeline/maven-timeline.js`
+* Maven Config Property `maven-timeline.timeline.output.file` the output of Timeline (a single self-contained HTML file), default is top level project `${outputDirectory}/timeline/timeline.html`
 
 The names used up to version 2.1.0, `maven-timeline.metrics.output` and `maven-timeline.timeline.output`, are still accepted.
 

@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -14,10 +15,13 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.apache.maven.execution.DefaultMavenExecutionRequest;
 import org.apache.maven.execution.DefaultMavenExecutionResult;
 import org.apache.maven.execution.ExecutionEvent;
 import org.apache.maven.execution.MavenSession;
+import org.apache.maven.execution.ProjectDependencyGraph;
 import org.apache.maven.model.Build;
 import org.apache.maven.model.Plugin;
 import org.apache.maven.plugin.MojoExecution;
@@ -46,6 +50,27 @@ class TimelineListenerTest {
         MavenSession session =
                 new MavenSession(null, rss, new DefaultMavenExecutionRequest(), new DefaultMavenExecutionResult());
         session.setProjects(Collections.singletonList(project));
+        session.setProjectDependencyGraph(new ProjectDependencyGraph() {
+            @Override
+            public List<MavenProject> getAllProjects() {
+                return Collections.singletonList(project);
+            }
+
+            @Override
+            public List<MavenProject> getSortedProjects() {
+                return Collections.singletonList(project);
+            }
+
+            @Override
+            public List<MavenProject> getDownstreamProjects(MavenProject p, boolean transitive) {
+                return Collections.emptyList();
+            }
+
+            @Override
+            public List<MavenProject> getUpstreamProjects(MavenProject p, boolean transitive) {
+                return Collections.emptyList();
+            }
+        });
 
         Plugin plugin = new Plugin();
         plugin.setGroupId("org.apache.maven.plugins");
@@ -84,24 +109,30 @@ class TimelineListenerTest {
                         JsonArray.class);
         assertEquals(5, metrics.size());
         int failed = 0;
+        int critical = 0;
         for (int i = 0; i < metrics.size(); i++) {
             JsonObject m = metrics.get(i).getAsJsonObject();
+            assertEquals(Thread.currentThread().getName(), m.get("threadName").getAsString());
+            if (m.has("critical")) {
+                assertEquals("g", m.get("groupId").getAsString()); // project mojos only, never resolver events
+                critical++;
+            }
             if (m.has("failed")) {
                 assertEquals("deploy", m.get("goal").getAsString());
                 failed++;
             }
         }
         assertEquals(1, failed);
+        assertEquals(3, critical);
 
-        String js =
-                new String(Files.readAllBytes(target.resolve("timeline/maven-timeline.js")), StandardCharsets.UTF_8);
-        assertTrue(js.startsWith("window.timelineData = ") && js.endsWith(";"));
-        JsonObject timeline =
-                new Gson().fromJson(js.substring("window.timelineData = ".length(), js.length() - 1), JsonObject.class);
+        String html = new String(Files.readAllBytes(target.resolve("timeline/timeline.html")), StandardCharsets.UTF_8);
+        assertTrue(html.contains("function TimeLineApp()"));
+        int dataStart = html.indexOf("window.timelineData = ") + "window.timelineData = ".length();
+        JsonObject timeline = new Gson()
+                .fromJson(html.substring(dataStart, html.indexOf(";\n</script>", dataStart)), JsonObject.class);
         assertEquals("a", timeline.get("artifactId").getAsString());
         assertEquals(5, timeline.getAsJsonArray("events").size());
-        String html = new String(Files.readAllBytes(target.resolve("timeline/timeline.html")), StandardCharsets.UTF_8);
-        assertTrue(html.contains("window.timelineData = ") && html.contains("function TimeLineApp()"));
+        assertEquals(Arrays.asList("timeline.html"), listFileNames(target.resolve("timeline")));
         assertTrue(!html.contains(" src=") && !html.contains(" href="), "timeline.html must be self-contained");
     }
 
@@ -119,6 +150,12 @@ class TimelineListenerTest {
         assertEquals(
                 Arrays.asList("g:b", "g:c"),
                 TimelineListener.criticalPath(upstream::get, Arrays.asList(a, b, c, unrelated), events));
+    }
+
+    private static List<String> listFileNames(Path dir) throws IOException {
+        try (Stream<Path> files = Files.list(dir)) {
+            return files.map(p -> p.getFileName().toString()).collect(Collectors.toList());
+        }
     }
 
     private static MavenProject project(String artifactId) {
