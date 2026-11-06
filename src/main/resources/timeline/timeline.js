@@ -11,6 +11,8 @@ var MIN_DURATION_MS = 50;
 var EVENT_STYLES = ["odd", "even"];
 
 function TimeLine(timelineData) {
+  var critical = new Set(timelineData.criticalPath || []);
+  var tracks = timelineData.tracks || {};
 
   addProperty(document.getElementsByTagName("header")[0], timelineData, "groupId");
   addProperty(document.getElementsByTagName("header")[0], timelineData, "artifactId");
@@ -32,19 +34,19 @@ function TimeLine(timelineData) {
     var durationTime = new Date(currentTime - sessionStartTime);
 
     if(zoomFactor > 2000) {
-      if(date.getUTCMinutes() % 5 != 0) return;
+      if(date.getMinutes() % 5 != 0) return;
     }
     else if(zoomFactor > 1250) {
-      if(date.getUTCMinutes() % 4 != 0) return;
+      if(date.getMinutes() % 4 != 0) return;
     }
     else if(zoomFactor > 750) {
-      if(date.getUTCMinutes() % 2 != 0) return;
+      if(date.getMinutes() % 2 != 0) return;
     }
 
-    timeLabel.innerText = twoDigits(date.getUTCHours()) + ":" + twoDigits(date.getUTCMinutes());
+    timeLabel.innerText = twoDigits(date.getHours()) + ":" + twoDigits(date.getMinutes());
     durationLabel.innerText = twoDigits(durationTime.getUTCHours()) + ":" + twoDigits(durationTime.getUTCMinutes());
     if(zoomFactor < 10) {
-      timeLabel.innerText = timeLabel.innerText + ":" + twoDigits(date.getUTCSeconds());
+      timeLabel.innerText = timeLabel.innerText + ":" + twoDigits(date.getSeconds());
       durationLabel.innerText = durationLabel.innerText + ":" + twoDigits(durationTime.getUTCSeconds());
     }
     var left = normalize(sessionStartTime, currentTime, zoomFactor);
@@ -65,11 +67,11 @@ function TimeLine(timelineData) {
       event.phase + ":" +
       event.goal + ":" +
       event.id + "(" +
-      formatTime(event.duration) + ")";
+      formatTime(event.duration) + ")" +
+      (event.failed ? " FAILED" : "");
   }
 
   this.render = function(zoomFactor) {
-    console.log(zoomFactor);
     var sessionStartTime = timelineData.start;
     var sessionEndTime = timelineData.end;
 
@@ -95,6 +97,7 @@ function TimeLine(timelineData) {
         container = document.createElement("div");
         container.setAttribute("id", event.trackNum);
         container.setAttribute("class", "track");
+        container.setAttribute("title", tracks[event.trackNum] || "");
         rootContainer.appendChild(container);
       }
 
@@ -106,19 +109,19 @@ function TimeLine(timelineData) {
       addProperty(div, event, "mojoArtifactId");
       addProperty(div, event, "phase");
       addProperty(div, event, "goal");
-      if (event.id.indexOf("default-") != 0) {
+      if (event.id && event.id.indexOf("default-") != 0) {
         addProperty(div, event, "id");
       }
       addProperty(div, event, "duration");
       var left = normalize(sessionStartTime, startTime, zoomFactor);
 
-      var styleIndex = styleIndexPerTrack[event.track];
+      var styleIndex = styleIndexPerTrack[event.trackNum];
       if(styleIndex == undefined) {
         styleIndex = 0;
       }
       var eventColor = EVENT_STYLES[styleIndex];
       styleIndex = (styleIndex + 1) % EVENT_STYLES.length;
-      styleIndexPerTrack[event.track] = styleIndex;
+      styleIndexPerTrack[event.trackNum] = styleIndex;
 
       var style = "width: " + width + "px; left: " + left + "px;";
       div.setAttribute("style", style);
@@ -128,7 +131,9 @@ function TimeLine(timelineData) {
         "phase-" + event.phase + " " +
         "goal-" + event.goal + " " +
         "artifactId-" + event.artifactId + " " +
-        "id-" + event.id)
+        "id-" + event.id +
+        (critical.has(event.groupId + ":" + event.artifactId) ? " critical" : "") +
+        (event.failed ? " failed" : ""))
       ;
       div.setAttribute("title", description(event));
     }

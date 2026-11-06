@@ -18,15 +18,7 @@ window.highlightColorTheme = [
 
 function TimeLineApp() {
   var timelineData = window.timelineData;
-  if (timelineData == undefined) {
-    $.ajax({
-      url: "maven-timeline.json",
-      dataType: "json",
-      async: false
-    }).done(function (data) {
-      timelineData = data
-    });
-  }
+  var tracks = timelineData.tracks || {};
   this.timeLineDb = new TimeLineDb(timelineData);
   this.timeLine = new TimeLine(timelineData);
 
@@ -36,70 +28,105 @@ function TimeLineApp() {
     return element;
   }
 
+  function addCard(title, cssClass) {
+    var card = document.createElement("div");
+    card.setAttribute("class", cssClass + " card");
+    card.appendChild(elem("h2", title));
+    document.getElementsByTagName("aside")[0].appendChild(card);
+    return card;
+  }
+
+  function addRow(card, name, duration) {
+    var row = document.createElement("div");
+    row.setAttribute("data-name", name);
+    row.setAttribute("data-ms", duration);
+    row.appendChild(elem("span", name));
+    row.appendChild(elem("span", formatTime(duration)));
+    card.appendChild(row);
+  }
+
+  // Clicking a card's title toggles its rows between "by name" and "by duration" order.
+  function makeSortable(card) {
+    var h2 = card.querySelector("h2");
+    var byName = false;
+    h2.className = "sortable";
+    h2.title = "Click to sort by name / duration";
+    h2.addEventListener("click", function () {
+      byName = !byName;
+      Array.from(card.querySelectorAll("div[data-ms]"))
+        .sort(function (a, b) {
+          return byName
+            ? a.getAttribute("data-name").localeCompare(b.getAttribute("data-name"))
+            : b.getAttribute("data-ms") - a.getAttribute("data-ms");
+        })
+        .forEach(function (row) { card.appendChild(row); });
+    });
+  }
+
   function addStatsCards(timeLineDb) {
-    var cardTitles = ["Summary by phase", "Summary by goal", "Summary by artifact", "Summary by track"];
+    var phases = addCard("Summary by phase", "summary");
+    timeLineDb.getTotalPhaseDuration(function (phase, duration) { addRow(phases, phase, duration); });
+    var goals = addCard("Summary by goal", "summary");
+    timeLineDb.getTotalGoalDuration(function (goal, duration) { addRow(goals, goal, duration); });
+    var artifacts = addCard("Summary by artifact", "summary");
+    timeLineDb.getTotalArtifactDuration(function (artId, duration) { addRow(artifacts, artId, duration); });
+    var trackCard = addCard("Summary by track", "summary");
+    timeLineDb.getTotalTrackDuration(function (track, duration) { addRow(trackCard, tracks[track] || String(track), duration); });
+    [phases, goals, artifacts, trackCard].forEach(makeSortable);
+  }
 
-    for (var i = 0; i < cardTitles.length; i++) {
-      var summary = document.createElement("div");
-      summary.setAttribute("class", "summary card");
-      var h2 = document.createElement("h2");
-      h2.innerText = cardTitles[i];
-      summary.appendChild(h2);
-      document.getElementsByTagName("aside")[0].appendChild(summary);
+  function addCriticalPath() {
+    var path = timelineData.criticalPath || [];
+    if (path.length < 2) {
+      return; // a single module is trivially its own critical path
     }
-
-    timeLineDb.getTotalPhaseDuration(function (phase, duration) {
-      var container = document.createElement("div");
-      container.appendChild(elem("span", phase));
-      container.appendChild(elem("span", formatTime(duration)));
-      document.getElementsByClassName("summary")[0].appendChild(container);
-    });
-    timeLineDb.getTotalGoalDuration(function (goal, duration) {
-      var container = document.createElement("div");
-      container.appendChild(elem("span", goal));
-      container.appendChild(elem("span", formatTime(duration)));
-      document.getElementsByClassName("summary")[1].appendChild(container);
-    });
-    timeLineDb.getTotalArtifactDuration(function (artId, duration) {
-      var container = document.createElement("div");
-      container.appendChild(elem("span", artId));
-      container.appendChild(elem("span", formatTime(duration)));
-      document.getElementsByClassName("summary")[2].appendChild(container);
-    });
-    timeLineDb.getTotalTrackDuration(function (track, duration) {
-      var container = document.createElement("div");
-      container.appendChild(elem("span", track));
-      container.appendChild(elem("span", formatTime(duration)));
-      document.getElementsByClassName("summary")[3].appendChild(container);
+    var card = addCard("Critical path", "summary");
+    card.appendChild(elem("p", "Modules (in build order) that determined the total build time."));
+    path.forEach(function (module) {
+      var start = Infinity, end = 0;
+      timelineData.events.forEach(function (e) {
+        if (e.groupId + ":" + e.artifactId == module) {
+          start = Math.min(start, e.start);
+          end = Math.max(end, e.end);
+        }
+      });
+      addRow(card, module.substring(module.indexOf(":") + 1), end - start);
     });
   }
 
   function addControls(zoomMin, zoomMax, zoomDefault, timeLineDb, timeLine) {
-    var controlsContainer = document.createElement("div");
-    controlsContainer.setAttribute("class", "controls card");
-    var h2 = document.createElement("h2");
-    h2.innerText = "Controls";
-    controlsContainer.appendChild(h2);
-    document.getElementsByTagName("aside")[0].appendChild(controlsContainer);
+    var controlsContainer = addCard("Controls", "controls");
 
     var sliderContainer = document.createElement("div");
-    var slider = document.createElement("div");
-    slider.setAttribute("id", "zoomSlider");
+    var slider = document.createElement("input");
+    slider.type = "range";
+    slider.id = "zoomSlider";
+    slider.min = zoomMin;
+    slider.max = zoomMax;
+    slider.step = 1;
+    slider.value = zoomDefault;
+    slider.addEventListener("change", function () {
+      timeLine.render(Number(slider.value));
+    });
     sliderContainer.appendChild(elem("span", "Zoom"));
     sliderContainer.appendChild(slider);
+    controlsContainer.appendChild(sliderContainer);
+
+    var minDurationLabel = elem("label", "Hide events shorter than (ms) ");
+    var minDuration = document.createElement("input");
+    minDuration.type = "number";
+    minDuration.min = 0;
+    minDuration.value = MIN_DURATION_MS;
+    minDuration.addEventListener("change", function () {
+      MIN_DURATION_MS = Math.max(0, Number(minDuration.value) || 0);
+      timeLine.render(Number(slider.value));
+    });
+    minDurationLabel.appendChild(minDuration);
+    controlsContainer.appendChild(minDurationLabel);
 
     var legendElement = document.createElement("legend");
     legendElement.innerText = "Show/Hide labels";
-    controlsContainer.appendChild(sliderContainer);
     controlsContainer.appendChild(legendElement);
-    $(function () {
-      $("#zoomSlider").slider({
-        min: zoomMin, max: zoomMax, step: 1, value: zoomDefault,
-        change: function (ev, ui) {
-          timeLine.render(ui.value);
-        }
-      });
-    });
 
     appendCssClassToggle(controlsContainer, "groupId", false);
     appendCssClassToggle(controlsContainer, "artifactId", true);
@@ -110,17 +137,21 @@ function TimeLineApp() {
     appendCssClassToggle(controlsContainer, "id", false);
     appendCssClassToggle(controlsContainer, "duration", true);
 
+    if ((timelineData.criticalPath || []).length > 1) {
+      legendElement = document.createElement("legend");
+      legendElement.innerText = "Highlight";
+      controlsContainer.appendChild(legendElement);
+      appendToggle(controlsContainer, "critical path",
+        "#timeLineContainer .event.critical { border-bottom: 4px solid #1565c0; }");
+    }
+
     legendElement = document.createElement("legend");
     legendElement.innerText = "Highlight by phase";
     controlsContainer.appendChild(legendElement);
 
     timeLineDb.getTopPhases(HIGHLIGHTED_ITEMS, function(rows) {
-      var themeIndex = 0;
-      for(var i = 0; i < rows.length; i++, themeIndex++) {
-        if(themeIndex >= (window.highlightColorTheme.length)) {
-          themeIndex = 0;
-        }
-        appendHighlightToggle(controlsContainer, "phase-", rows[i]["phase"], themeIndex);
+      for (var i = 0; i < rows.length; i++) {
+        appendHighlightToggle(controlsContainer, "phase-", rows[i]["phase"], i % window.highlightColorTheme.length);
       }
 
       legendElement = document.createElement("legend");
@@ -128,122 +159,71 @@ function TimeLineApp() {
       controlsContainer.appendChild(legendElement);
 
       timeLineDb.getTopGoals(HIGHLIGHTED_ITEMS, function(rows) {
-        var themeIndex = 0;
-        for(var i = 0; i < rows.length; i++, themeIndex++) {
-          if(themeIndex >= (window.highlightColorTheme.length)) {
-             themeIndex = 0;
-          }
+        for (var i = 0; i < rows.length; i++) {
+          var themeIndex = i % window.highlightColorTheme.length;
           appendHighlightToggle(controlsContainer, "goal-", rows[i]["goal"], window.highlightColorTheme.length - 1 - themeIndex);
         }
       });
     });
   }
 
-  function appendCssClassToggle(controlsContainer, className, enabled) {
+  // All toggles feed one generated stylesheet, so their state survives re-rendering on zoom.
+  // A checkbox with data-css adds that CSS while checked; one without hides its label class while unchecked.
+  function updateToggleStyles() {
+    var style = document.getElementById("toggleStyles");
+    if (style == null) {
+      style = document.createElement("style");
+      style.id = "toggleStyles";
+      document.head.appendChild(style);
+    }
+    var css = "";
+    document.querySelectorAll(".controls input[type=checkbox]").forEach(function (input) {
+      if (input.hasAttribute("data-css")) {
+        if (input.checked) {
+          css += input.getAttribute("data-css") + "\n";
+        }
+      } else if (!input.checked) {
+        css += "#timeLineContainer ." + CSS.escape(input.getAttribute("data-title")) + " { display: none; }\n";
+      }
+    });
+    style.textContent = css;
+  }
+
+  function appendToggle(controlsContainer, title, css, checked) {
     var label = document.createElement("label");
     var input = document.createElement("input");
-    var name = "checkbox-nested-" + className;
-
-    input.setAttribute("type", "checkbox");
-    input.setAttribute("name", name);
-    input.setAttribute("id", name);
-    input.setAttribute("data-title", className);
-    label.setAttribute("for", name);
-
-    if(enabled != undefined && enabled != false) {
-      input.setAttribute("checked", true);
+    input.type = "checkbox";
+    input.checked = !!checked;
+    input.setAttribute("data-title", title);
+    if (css) {
+      input.setAttribute("data-css", css);
     }
-    //else {
-    //  document.styleSheets[0].addRule("." + className, "display: none;");
-    //}
-
-    label.innerText = className;
+    input.addEventListener("change", updateToggleStyles);
     label.appendChild(input);
+    label.appendChild(document.createTextNode(title.replace(/^(phase|goal)-/, "")));
     controlsContainer.appendChild(label);
+    updateToggleStyles();
+    return label;
+  }
 
-    $(function () {
-      $("#" + name).checkboxradio({
-        icon: false,
-        value: enabled
-      });
-    });
-    $("#" + name).on("change", function (e) {
-      var attribute = e.target.getAttribute("data-title");
-
-      if (e.target.checked == true) {
-        $("." + attribute).show();
-      }
-      else {
-        $("." + attribute).hide();
-      }
-    });
+  function appendCssClassToggle(controlsContainer, className, enabled) {
+    appendToggle(controlsContainer, className, null, enabled);
   }
 
   function appendHighlightToggle(controlsContainer, classPrefix, className, index) {
-    var label = document.createElement("label");
-    var input = document.createElement("input");
-    var name = "checkbox-nested-" + classPrefix + className;
-
-    input.setAttribute("type", "checkbox");
-    input.setAttribute("name", name);
-    input.setAttribute("id", name);
-    input.setAttribute("data-title", classPrefix+className);
-    input.setAttribute("data-index", index);
-    label.setAttribute("for", name);
+    var color = window.highlightColorTheme[index];
+    var label = appendToggle(controlsContainer, classPrefix + className,
+      "#timeLineContainer ." + CSS.escape(classPrefix + className) + ".event { background-color: " + color + " !important; }");
     label.setAttribute("class", "highlightingBox");
-    label.setAttribute("style", "background-color: " + window.highlightColorTheme[index] + "; border-color: " + window.highlightColorTheme[index]);
-
-    label.innerText = className;
-    label.appendChild(input);
-    controlsContainer.appendChild(label);
-
-    //document.styleSheets[0].addRule(".event" + "." + classPrefix+className + ":hover",
-    //  "background-color: " + window.highlightColorTheme[index] + "; transition: background-color .5s;"
-    //);
-
-    $(function () {
-      $("#" + name).checkboxradio({
-        icon: false,
-        value: false
-      });
-    });
-    $("#" + name).on("change", function (e) {
-      var attribute = e.target.getAttribute("data-title");
-      var index = e.target.getAttribute("data-index");
-
-      var sheet = document.styleSheets[attribute];
-      if(sheet == undefined) {
-        document.styleSheets[attribute] = (function() {
-          var style = document.createElement("style");
-          style.appendChild(document.createTextNode(""));
-          document.head.appendChild(style);
-          return style.sheet;
-        })();
-        sheet = document.styleSheets[attribute];
-      }
-      if (e.target.checked == true) {
-        sheet.addRule("." + attribute + ".event", "background-color: " + window.highlightColorTheme[index] + " !important");
-      }
-      else {
-        sheet.removeRule(0);
-      }
-    });
+    label.setAttribute("style", "background-color: " + color + "; border-color: " + color);
   }
 
   function addRankings(timeLineDb) {
-    var controlsContainer = document.createElement("div");
-    controlsContainer.setAttribute("class", "ranking card");
-    var h2 = document.createElement("h2");
-    h2.innerText = "Top 10 artifacts";
-    controlsContainer.appendChild(h2);
-    document.getElementsByTagName("aside")[0].appendChild(controlsContainer);
-
+    var card = addCard("Top 10 artifacts", "ranking");
     timeLineDb.getTopArtifacts(10, function (groupId, artId, phase, goal, duration) {
-      var container = document.createElement("div");
-      container.appendChild(elem("span", artId + ":" + phase + ":" + goal));
-      container.appendChild(elem("span", formatTime(duration)));
-      document.getElementsByClassName("ranking")[0].appendChild(container);
+      addRow(card, artId + ":" + phase + ":" + goal, duration);
     });
+    makeSortable(card);
   }
 
   this.run = function() {
@@ -254,9 +234,10 @@ function TimeLineApp() {
     this.timeLine.render(zoomDefault);
 
     addControls(zoomMin, zoomMax, zoomDefault, this.timeLineDb, this.timeLine);
+    addCriticalPath();
     addStatsCards(this.timeLineDb);
-    addRankings(this.timeLineDb)
-  }
+    addRankings(this.timeLineDb);
+  };
 }
 
 function formatTime(duration) {
@@ -266,7 +247,5 @@ function formatTime(duration) {
   if(duration < 1000 * 60) {
     return Number((duration/1000).toFixed(1)) + " s";
   }
-  // if(duration < 1000 * 60 * 60) {
-    return Math.floor(duration / (1000 * 60)) + " min " + Math.floor(((duration % (60 * 1000)) / 1000)) + " s";
-  // }
+  return Math.floor(duration / (1000 * 60)) + " min " + Math.floor(((duration % (60 * 1000)) / 1000)) + " s";
 }

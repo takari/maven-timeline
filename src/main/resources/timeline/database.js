@@ -3,61 +3,37 @@
  */
 function TimeLineDb(timelineData) {
 
+  // [[value, totalDuration], ...] grouped by event[key], longest first
+  function sumBy(key) {
+    var totals = new Map();
+    timelineData.events.forEach(function (e) {
+      totals.set(e[key], (totals.get(e[key]) || 0) + e.duration);
+    });
+    return Array.from(totals.entries()).sort(function (a, b) { return b[1] - a[1]; });
+  }
+
   this.getTopPhases = function(limit, renderFunc) {
-    // "select phase from events group by phase order by sum(duration) desc LIMIT ?", [limit]
-    renderFunc(Object.entries(timelineData.events
-      .map(({phase, duration}) => ({phase, duration}))
-      .reduce((acc, {phase, duration}) => ({...acc, [phase]: (acc[phase] || 0) + duration}), {}))
-      .sort((a, b) => b[1] - a[1])
-      .map(([phase]) => ({phase}))
-      .slice(0, limit));
+    renderFunc(sumBy("phase").slice(0, limit).map(function (r) { return {phase: r[0]}; }));
   };
   this.getTopGoals = function(limit, renderFunc) {
-    // "select goal from events group by goal order by sum(duration) desc LIMIT ?", [limit]
-    renderFunc(Object.entries(timelineData.events
-      .map(({goal, duration}) => ({goal, duration}))
-      .reduce((acc, {goal, duration}) => ({...acc, [goal]: (acc[goal] || 0) + duration}), {}))
-      .sort((a, b) => b[1] - a[1])
-      .map(([goal]) => ({goal}))
-      .slice(0, limit));
+    renderFunc(sumBy("goal").slice(0, limit).map(function (r) { return {goal: r[0]}; }));
   };
   this.getTopArtifacts = function(limit, renderFunc) {
-    // "select groupId, artifactId, phase, goal, duration from events order by duration desc limit ?", [limit]
-    timelineData.events
-      .sort((a, b) => b.duration - a.duration)
+    timelineData.events.slice() // do not reorder the shared events array
+      .sort(function (a, b) { return b.duration - a.duration; })
       .slice(0, limit)
-      .forEach(e => renderFunc(e.groupId, e.artifactId, e.phase, e.goal, e.duration));
+      .forEach(function (e) { renderFunc(e.groupId, e.artifactId, e.phase, e.goal, e.duration); });
   };
   this.getTotalPhaseDuration = function(renderFunc) {
-    // "select phase, sum(duration) from events group by phase order by sum(duration) desc"
-    Object.entries(timelineData.events
-      .map(({phase, duration}) => ({phase, duration}))
-      .reduce((acc, {phase, duration}) => ({...acc, [phase]: (acc[phase] || 0) + duration}), {}))
-      .sort((a, b) => b[1] - a[1])
-      .forEach(([phase, duration]) => renderFunc(phase, duration));
+    sumBy("phase").forEach(function (r) { renderFunc(r[0], r[1]); });
   };
   this.getTotalGoalDuration = function(renderFunc) {
-    // "select goal, sum(duration) from events group by goal order by sum(duration) desc"
-    Object.entries(timelineData.events
-      .map(({goal, duration}) => ({goal, duration}))
-      .reduce((acc, {goal, duration}) => ({...acc, [goal]: (acc[goal] || 0) + duration}), {}))
-      .sort((a, b) => b[1] - a[1])
-      .forEach(([goal, duration]) => renderFunc(goal, duration));
+    sumBy("goal").forEach(function (r) { renderFunc(r[0], r[1]); });
   };
   this.getTotalArtifactDuration = function(renderFunc) {
-    // "select artifactId, sum(duration) from events group by artifactId order by sum(duration) desc"
-    Object.entries(timelineData.events
-      .map(({artifactId, duration}) => ({artifactId, duration}))
-      .reduce((acc, {artifactId, duration}) => ({...acc, [artifactId]: (acc[artifactId] || 0) + duration}), {}))
-      .sort((a, b) => b[1] - a[1])
-      .forEach(([artifactId, duration]) => renderFunc(artifactId, duration));
+    sumBy("artifactId").forEach(function (r) { renderFunc(r[0], r[1]); });
   };
   this.getTotalTrackDuration = function(renderFunc) {
-    // "select trackNum, sum(duration) from events group by trackNum order by sum(trackNum) desc"
-    Object.entries(timelineData.events
-      .map(({trackNum, duration}) => ({trackNum, duration}))
-      .reduce((acc, {trackNum, duration}) => ({...acc, [trackNum]: (acc[trackNum] || 0) + duration}), {}))
-      .sort((a, b) => b[1] - a[1])
-      .forEach(([trackNum, duration]) => renderFunc(trackNum, duration));
+    sumBy("trackNum").forEach(function (r) { renderFunc(r[0], r[1]); });
   };
 }

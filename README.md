@@ -10,7 +10,7 @@ A tiny, minimal overhead extension to create build metrics and timeline for proj
 
 Runtime requirement is Java 8 and Maven 3.6+.
 
-To generate a timeline for your project add this to the `build` section of your `pom.xml`, or (recommended), create file `.mvn/extensions.xml` is project root with contents as below:
+To generate a timeline for your project add this to the `build` section of your `pom.xml`, or (recommended), create file `.mvn/extensions.xml` in project root with contents as below:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -25,6 +25,19 @@ To generate a timeline for your project add this to the `build` section of your 
 
 Once your project has run you will have a `target/timeline/timeline.html` in the top-level of your project. The output will look something like the following:
 
+![Maven Timeline](maven-timeline.png)
+
+The report is a single self-contained HTML file (no CDN or network access needed), so it can be archived as a CI
+build artifact and opened later. It shows:
+
+* one track per thread (hover a track, or see "Summary by track", for the thread name),
+* failed mojos outlined in red,
+* the **critical path**: the chain of modules that determined the total build time in a parallel (`-T`) build,
+  with a toggle to highlight it on the timeline,
+* summaries by phase, goal, artifact and track (click a card title to sort by name or duration).
+
+Events shorter than 50 ms are hidden by default; change this with the "Hide events shorter than" control.
+
 ## Configuration
 
 Use following properties:
@@ -34,10 +47,10 @@ Use following properties:
 * Maven Config Property `maven-timeline.metrics.output.file` the output of metrics JSON file, default is top level project `${outputDirectory}/execution-metrics.json`
 * Maven Config Property `maven-timeline.timeline.output.file` the output of Timeline (data and HTML/JS), default is top level project `${outputDirectory}/timeline/maven-timeline.js`
 
+The names used up to version 2.1.0, `maven-timeline.metrics.output` and `maven-timeline.timeline.output`, are still accepted.
+
 Note: Java System Properties must be set via `MAVEN_OPTS` or via `.mvn/jvm.config`, while
 Maven Config Property can be set via `-D` command line or in `.mvn/maven.config`, see https://maven.apache.org/configure.html
-
-![Maven Timeline](maven-timeline.png)
 
 ## Building
 
